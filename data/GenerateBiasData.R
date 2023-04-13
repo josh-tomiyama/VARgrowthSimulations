@@ -48,8 +48,8 @@ set.seed(123123)
 seeds <- sample.int(1000, nreps)
 
 Asym <- 20000
-offset <- c(0.5, 1, 2)
-growth <- c(0.3, 0.5, 0.7)
+offset <- c(2)
+growth <- c(0.4, 0.7)
 
 mean_param_grid <- expand.grid(Asym, offset, growth)
 var_param <- c(0.05)^2
