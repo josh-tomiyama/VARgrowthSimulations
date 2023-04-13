@@ -1,0 +1,214 @@
+---
+title: "SimulationExample"
+output: html_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(VARgrowth)
+library(splines)
+library(mvtnorm)
+library(dplyr)
+library(ggplot2)
+library(nlme)
+library(rstan)
+library(bayesplot)
+library(brms)
+```
+
+
+```{r fit model}
+data <- readRDS("./SimData.RDS")
+nchains = 4
+iter = 5000
+warmup = 0.5*iter
+seed = 123123
+
+fit_model <- function(data){
+  ### FOR NOW: growth function and theta transform are fixed
+  GrowthFunction <- GompertzFunction()
+  numMeanParams <- GrowthFunction$num_params
+  totalGroups <- length(unique(train_data$group))
+
+  pTheta <- PriorTheta(rep(list(NoPrior()), numMeanParams),
+                     priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
+                     priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
+  pObsVar <- PriorObsVar(list(NormalPrior()),
+                       priorParam1 = 2,
+                       priorParam2 = 2)
+  pBeta <- PriorBetaTheta(list(NormalPrior()),
+               priorParam1 = matrix(0, ncol(XTheta), numMeanParams),
+               priorParam2 = matrix(5, ncol(XTheta), numMeanParams))
+
+  pSigmaTheta <- PriorSigmaTheta(rep(list(NormalPrior()), numMeanParams),
+                         priorParam1 = rep(0, numMeanParams),
+                         priorParam2 = rep(100, numMeanParams))
+
+  PriorList <- list(pTheta,
+                    pObsVar,
+                    pBeta,
+                    pSigmaTheta)
+
+  ThetaTransform <- ThetaTransformations(list(logTransform,
+                                              logTransform,
+                                              logitTransform),
+                                         inverse = FALSE)
+  
+  ### model 1: intercept model
+  ThetaTrend <- LinearModelTrend(data, ~ 1)
+  
+  fit <- VARGrowth(data,
+                 ThetaTrend_model, 
+                 GrowthFunction, 
+                 PriorList, 
+                 ThetaTransform,
+                 nchains = nchains,
+                 cores = nchains,
+                 control = ctrl,
+                 iter = iter,
+                 warmup = warmup,
+                 seed = 123123,
+                 pars = c("marg_log_lik_samp", "theta_samp",
+                          "mu_temp"),
+                 include = FALSE)
+}
+
+numMeanParams <- GrowthFunction$num_params
+totalGroups <- length(unique(train_data$group))
+
+pTheta <- PriorTheta(rep(list(NoPrior()), numMeanParams),
+                     priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
+                     priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
+pObsVar <- PriorObsVar(list(InvGammaPrior()),
+                       priorParam1 = 2,
+                       priorParam2 = 2)
+pBeta <- PriorBetaTheta(list(NormalPrior()),
+               priorParam1 = matrix(0, ncol(XTheta), numMeanParams),
+               priorParam2 = matrix(5, ncol(XTheta), numMeanParams))
+
+pSigmaTheta <- PriorSigmaTheta(rep(list(InvGammaPrior()), numMeanParams),
+                       priorParam1 = rep(2, numMeanParams),
+                       priorParam2 = rep(2, numMeanParams))
+
+PriorList <- list(pTheta,
+                  pObsVar,
+                  pBeta,
+                  pSigmaTheta)
+
+fit_data <- VARGrowthData(train_data, "time", "group", "outcome")
+
+ThetaTrend2 <- LinearModelTrend(fit_data, ~ 1)
+
+fit <- VARGrowth(fit_data,
+                 ThetaTrend2, 
+                 GrowthFunction, 
+                 PriorList, 
+                 ThetaTransform,
+                 nchains = nchains,
+                 cores = nchains,
+                 control = list(adapt_delta = 0.9),
+                 iter = iter,
+                 warmup = warmup,
+                 seed = seed)
+
+(obs_time <- system.time(pp_obs <- VARgrowth::posterior_predict(fit,
+                                   seed = seed)))
+
+# (serial_time <- system.time(pp_serial <- posterior_predict(fit,
+                                   # newdata = fit_data,
+                                   # seed = 123123)))
+
+
+### fit on obs data
+(parallel_time <- system.time(
+  pp_parallel <- VARgrowth::posterior_predict(fit,
+                                   newdata = fit_data,
+                                   ncores = 8,
+                                   seed = seed)
+  )
+)
+### Fit on both data
+
+(parallel_time2 <- system.time(
+  pp_parallel2 <- VARgrowth::posterior_predict(fit,
+                                   newdata = test_data,
+                                   ncores = 8,
+                                   seed = seed)
+  )
+)
+
+# spp_obs <- pp_obs %>%
+#   rowwise(group, time) %>%
+#   summarize(pp_mean = mean(c_across(starts_with("iter_"))),
+#             pp_q1 = quantile(c_across(starts_with("iter_")), probs = .025),
+#             pp_q2 = quantile(c_across(starts_with("iter_")), probs = .975))
+
+
+spp_parallel <- pp_parallel %>%
+  rowwise(group, time) %>%
+  summarize(pp_mean = mean(c_across(starts_with("iter_"))),
+            pp_q1 = quantile(c_across(starts_with("iter_")), probs = .025),
+            pp_q2 = quantile(c_across(starts_with("iter_")), probs = .975),
+            ci_width = pp_q2 - pp_q1)
+
+
+
+spp_parallel_check <- summary(pp_parallel)
+spp_parallel2_check <- summary(pp_parallel2)
+# plot not working
+# p1 <- plot(pp_parallel)
+# p2 <- plot(pp_parallel)
+
+
+spp_parallel2 <- pp_parallel2 %>%
+  rowwise(group, time) %>%
+  summarize(pp_mean = mean(c_across(starts_with("iter_"))),
+            pp_q1 = quantile(c_across(starts_with("iter_")), probs = .025),
+            pp_q2 = quantile(c_across(starts_with("iter_")), probs = .975),
+            ci_width = pp_q2 - pp_q1)
+
+# spp_obs$outcome <- train_data$outcome
+spp_parallel$outcome <- train_data$outcome
+spp_parallel2$outcome <- test_data$outcome
+
+bias1 <- spp_parallel %>% mutate(train_bias = pp_mean - outcome)
+bias2 <- spp_parallel2 %>% mutate(test_bias = pp_mean - outcome)
+
+# ggplot(spp_obs, aes(time, pp_mean)) +
+#   geom_point() +
+#   geom_line() +
+#   geom_line(aes(time, pp_q1, color = 'red'), linetype = 'dashed') +
+#   geom_line(aes(time, pp_q2, color = 'red'), linetype = 'dashed') +
+#   geom_point(aes(time, outcome), color = 'blue', size = 1.5) +
+#   facet_wrap(~group)
+
+ggplot(spp_parallel, aes(time, pp_mean)) +
+  geom_point() +
+  geom_line() +
+  geom_line(aes(time, pp_q1, color = 'red'), linetype = 'dashed') +
+  geom_line(aes(time, pp_q2, color = 'red'), linetype = 'dashed') +
+  geom_point(aes(time, outcome), color = 'blue', size = 1.5) +
+  facet_wrap(~group)
+
+ggplot(spp_parallel2, aes(time, pp_mean)) +
+  geom_point() +
+  geom_line() +
+  geom_line(aes(time, pp_q1, color = 'red'), linetype = 'dashed') +
+  geom_line(aes(time, pp_q2, color = 'red'), linetype = 'dashed') +
+  geom_point(aes(time, outcome), color = 'blue', size = 1.5) +
+  facet_wrap(~group)
+
+# pp2 <- pp %>% select(-time, -group, -outcome)
+# pp_parallel2 <- pp_parallel %>% select(-time, -group, -outcome)
+
+### Exactly the same as intended
+# pp2 - pp_parallel2
+
+```
+
