@@ -1,14 +1,14 @@
 library(VARgrowth)
 library(dplyr)
 
-ntpt = c(5, 10, 15)
-U = c(10, 20, 30)
+ntpt = c(5, 10, 20, 50)
+U = c(10, 25, 50)
 nreps = 100
 
 generate_data <- function(seed, tstart, tend, beta, sigma_theta, obsVar, ntpt, U){
-  dat <- data.frame(myTime = rep(seq(from = tstart, 
-                                     to = tend, 
-                                     by = (tend - tstart)/(ntpt - 1)), 
+  dat <- data.frame(myTime = rep(seq(from = tstart,
+                                     to = tend,
+                                     by = (tend - tstart)/(ntpt - 1)),
                                      times = U),
                                  myGroup = rep(factor(1:U), each = ntpt)
                     )
@@ -19,7 +19,7 @@ generate_data <- function(seed, tstart, tend, beta, sigma_theta, obsVar, ntpt, U
                                               logTransform,
                                               logitTransform),
                                          inverse = FALSE)
-  
+
   ### model 1: intercept model
   ThetaTrend <- LinearModelTrend(data, ~ 1)
   SimObj <- SimulateData(data,
@@ -31,7 +31,7 @@ generate_data <- function(seed, tstart, tend, beta, sigma_theta, obsVar, ntpt, U
                          ThetaTransform,
                          simplify = FALSE,
                          seed = seed)
-  
+
   data$outcome <- SimObj$obs$obs
   data
 }
@@ -48,28 +48,22 @@ set.seed(123123)
 seeds <- sample.int(1000, nreps)
 
 Asym <- 20000
-offset <- c(0.1, 0.5, 1, 2, 5)
-growth <- c(0.1, 0.3, 0.5, 0.7, 0.8)
+offset <- c(0.5, 1, 2)
+growth <- c(0.3, 0.5, 0.7)
 
 mean_param_grid <- expand.grid(Asym, offset, growth)
-var_param <- c(0.02, 0.05, 0.1, 0.15, 0.2)^2
+var_param <- c(0.05)^2
 var_param_grid <- expand.grid(var_param, var_param, var_param)
-obs_vars <- c(50, 100, 200, 500) ^ 2
+obs_vars <- c(100) ^ 2
 
-Asym <- 20000
-offset <- c(0.1, 0.5, 1, 2, 5)
-growth <- c(0.1, 0.3, 0.5, 0.7, 0.8)
-
-Asym_trans <- log(20000)
+Asym_trans <- log(Asym)
 offset_trans <- log(offset)
 growth_trans <- log(growth/(1-growth))
 
 mean_param_grid <- expand.grid(Asym, offset, growth)
 
 mean_param_grid_trans <- expand.grid(Asym_trans, offset_trans, growth_trans)
-var_param <- c(0.02, 0.05, 0.1, 0.2)^2
 var_param_grid <- expand.grid(var_param, var_param, var_param)
-obs_vars <- c(50, 100, 200, 500) ^ 2
 
 
 t_half <- apply(mean_param_grid, 1, function(row){
@@ -113,14 +107,14 @@ if(!dir.exists(dir_name)){
 
 for(i in 1:nrow(all_params)){
   curr_row <- all_params[i,]
-  sims <- lapply(seeds, 
-                 generate_data, 
-                 tstart = curr_row$tstart, 
-                 tend = curr_row$tend, 
-                 beta = c(curr_row$Asym, curr_row$offset, curr_row$growth), 
-                 sigma_theta = c(curr_row$var_param1, curr_row$var_param2, curr_row$var_param3), 
-                 obsVar = curr_row$obs_vars, 
-                 ntpt = curr_row$ntpt, 
+  sims <- lapply(seeds,
+                 generate_data,
+                 tstart = curr_row$tstart,
+                 tend = curr_row$tend,
+                 beta = c(curr_row$Asym, curr_row$offset, curr_row$growth),
+                 sigma_theta = c(curr_row$var_param1, curr_row$var_param2, curr_row$var_param3),
+                 obsVar = curr_row$obs_vars,
+                 ntpt = curr_row$ntpt,
                  U = curr_row$U)
   fname_prefix <- paste0("sim", i)
   sim_dir <- paste0(dir_name, "Sim", i, "/")
@@ -129,7 +123,7 @@ for(i in 1:nrow(all_params)){
   }
   true_param_file <- paste0(sim_dir, "Truth.RDS")
   data_file <- paste0(sim_dir, "SimData.RDS")
-  
+
   saveRDS(curr_row, true_param_file)
   saveRDS(sims, data_file)
 }
