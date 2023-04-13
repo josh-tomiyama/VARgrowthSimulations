@@ -1,0 +1,8 @@
+install.packages("splines")
+install.packages("mvtnorm")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("nlme")
+install.packages("rstan")
+install.packages("bayesplot")
+install.packages("brms")
