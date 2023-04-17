@@ -7,9 +7,9 @@ option_list <- list(
   make_option(c("-d", "--dir"), type = "character",
               default = "./data/InterceptBiasSimulation/", help = "config file path",
               metavar="character"),
-  make_option(c("-n", "--num"), type = "character",
-              default = "1", help = "config file path",
-              metavar="character")
+  make_option(c("-n", "--num"), type = "integer",
+              default = 1, help = "config file path",
+              metavar="integer")
 )
 
 
@@ -19,5 +19,5 @@ if(!file.exists(paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))){
   file.create(paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))
 }
 
-file.copy(opt$template, paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))
+file.copy(opt$template, paste0(opt$dir, "Sim", opt$num, "/template.Rmd"), overwrite = TRUE)
 rmarkdown::render(paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))

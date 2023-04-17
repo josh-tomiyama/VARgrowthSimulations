@@ -1,0 +1,1 @@
+Rscript --no-save --no-restore  render_markdown.R --num=$SGE_TASK_ID --template="../Templates/BiasEvaluationTemplate.Rmd" --dir="../data/InterceptBiasSimulation/"

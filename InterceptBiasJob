@@ -1,1 +1,0 @@
-Rscript ./scripts/render_markdown.R --template "../Templates/BiasEvaluationTemplate.Rmd" --dir "../data/InterceptBiasSimulation/" --num $SGE_TASK_ID
