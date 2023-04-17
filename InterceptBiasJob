@@ -1,0 +1,1 @@
+Rscript render_markdown.R --template $1 --dir $2 --num $SGE_TASK_ID
