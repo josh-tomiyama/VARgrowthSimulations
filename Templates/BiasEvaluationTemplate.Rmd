@@ -46,8 +46,8 @@ fit_model <- function(data,
                      priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
                      priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
   pObsVar <- PriorObsVar(list(InvGammaPrior()),
-                       priorParam1 = .0001,
-                       priorParam2 = .0001)
+                       priorParam1 = .001,
+                       priorParam2 = .001)
   pBeta <- PriorBetaTheta(list(NormalPrior()),
                priorParam1 = matrix(0, 1, numMeanParams),
                priorParam2 = matrix(5, 1, numMeanParams))
