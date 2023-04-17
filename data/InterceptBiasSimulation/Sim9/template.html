@@ -324,8 +324,8 @@ result &lt;- rbind(apply(post_mean_bias, 1 , mean),
                 apply(post_median_bias,1, median),
                 apply(cvr, 1, mean))
 result &lt;- as.data.frame(result)
-result$U &lt;- truth$U
-result$ntpt &lt;- truth$ntpt
+colnames(truth) &lt;- paste0(&quot;true_&quot;, colnames(truth))
+result &lt;- cbind(result, truth[rep(1, nrow(result)),])
 result$type &lt;- c(&quot;post_mean_bias&quot;, &quot;post_median_bias&quot;, &quot;coverage&quot;)
 saveRDS(result, &quot;Result.RDS&quot;)</code></pre>
 

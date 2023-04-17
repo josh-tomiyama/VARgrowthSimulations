@@ -144,14 +144,11 @@ result <- rbind(apply(post_mean_bias, 1 , mean),
                 apply(post_median_bias,1, median),
                 apply(cvr, 1, mean))
 result <- as.data.frame(result)
-result$U <- truth$U
-result$ntpt <- truth$ntpt
+colnames(truth) <- paste0("true_", colnames(truth))
+result <- cbind(result, truth[rep(1, nrow(result)),])
 result$type <- c("post_mean_bias", "post_median_bias", "coverage")
 saveRDS(result, "Result.RDS")
 ```
 
-```{r check divergences}
-
-```
 
 
