@@ -119,7 +119,9 @@ truth <- readRDS("./Truth.RDS")
 bias_calc <- function(fit_summary, truth, colname){
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
   post_est <- fit_summary[1:7, which(colnames(fit_summary) == colname)]
-  bias = post_est - params
+  bias <- as.numeric(post_est - params)
+  names(bias) <- c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")
+  bias
 }
 
 cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
@@ -132,6 +134,15 @@ cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
 post_mean_bias <- sapply(fits, bias_calc, truth = truth, colname = "mean")
 post_median_bias <- sapply(fits, bias_calc, truth = truth, colname = "50%")
 cvr <- sapply(fits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
+
+result <- rbind(apply(post_mean_bias, 1 , mean),
+                apply(post_median_bias,1, median),
+                apply(cvr, 1, mean))
+result <- as.data.frame(result)
+result$U <- truth$U
+result$ntpt <- truth$ntpt
+result$type <- c("post_mean_bias", "post_median_bias", "coverage")
+saveRDS(result, "Result.RDS")
 ```
 
 
