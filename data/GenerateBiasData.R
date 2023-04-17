@@ -3,7 +3,7 @@ library(dplyr)
 
 ntpt = c(5, 10, 20, 50)
 U = c(10, 25, 50)
-nreps = 100
+nreps = 50
 
 generate_data <- function(seed, tstart, tend, beta, sigma_theta, obsVar, ntpt, U){
   dat <- data.frame(myTime = rep(seq(from = tstart,
