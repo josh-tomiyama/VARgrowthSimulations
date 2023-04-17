@@ -46,8 +46,8 @@ fit_model <- function(data,
                      priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
                      priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
   pObsVar <- PriorObsVar(list(InvGammaPrior()),
-                       priorParam1 = .001,
-                       priorParam2 = .001)
+                       priorParam1 = 2,
+                       priorParam2 = 2)
   pBeta <- PriorBetaTheta(list(NormalPrior()),
                priorParam1 = matrix(0, 1, numMeanParams),
                priorParam2 = matrix(5, 1, numMeanParams))
@@ -99,6 +99,7 @@ fit_model <- function(data,
 
 ```
 
+
 ```{r do fit}
 data <- readRDS("./SimData.RDS")
 
@@ -115,13 +116,18 @@ if(!file.exists("SimFits.RDS")){
   fits <- readRDS("SimFits.RDS")
 }
 
-
+fail_idx <- sapply(fits, is.na)
+sum(fail_idx)
+fits <- fits[!fail_idx]
 ```
 
 ```{r get true params}
 truth <- readRDS("./Truth.RDS")
 
 bias_calc <- function(fit_summary, truth, colname){
+  if(is.na(fit_summary)){
+    return(NA)
+  }
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
   post_est <- fit_summary[1:7, which(colnames(fit_summary) == colname)]
   bias <- as.numeric(post_est - params)
@@ -130,10 +136,13 @@ bias_calc <- function(fit_summary, truth, colname){
 }
 
 cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
+  if(is.na(fit_summary)){
+    return(NA)
+  }
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
   ci_lwr <- fit_summary[1:7, which(colnames(fit_summary) == lwr_name)]
   ci_upr <- fit_summary[1:7, which(colnames(fit_summary) == upr_name)]
-  cvr = ci_lwr <= params & ci_upr >= params
+  cvr <- ci_lwr <= params & ci_upr >= params
 }
 
 post_mean_bias <- sapply(fits, bias_calc, truth = truth, colname = "mean")
@@ -141,7 +150,7 @@ post_median_bias <- sapply(fits, bias_calc, truth = truth, colname = "50%")
 cvr <- sapply(fits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
 
 result <- rbind(apply(post_mean_bias, 1 , mean),
-                apply(post_median_bias,1, median),
+                apply(post_median_bias,1, mean),
                 apply(cvr, 1, mean))
 result <- as.data.frame(result)
 colnames(truth) <- paste0("true_", colnames(truth))
