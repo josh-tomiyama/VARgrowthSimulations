@@ -83,7 +83,12 @@ fit_model <- function(data,
                  seed = seed,
                  pars = c("betaTheta", "SigmaTheta", "ObsVar"),
                  include = TRUE)
-    fit <- summary(fit$fit)$summary
+    if(get_num_divergent(fit) > 0){
+      cat("Divergent transitions were found")
+      fit <- NA
+    }else{
+      fit <- summary(fit$fit)$summary 
+    }
     },
     error = function(e){
       fit <- NA
@@ -145,5 +150,8 @@ result$type <- c("post_mean_bias", "post_median_bias", "coverage")
 saveRDS(result, "Result.RDS")
 ```
 
+```{r check divergences}
+
+```
 
 
