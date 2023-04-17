@@ -15,6 +15,9 @@ option_list <- list(
 
 opt_parser <- OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
+if(!file.exists(paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))){
+  file.create(paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))
+}
 
 file.copy(opt$template, paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))
 rmarkdown::render(paste0(opt$dir, "Sim", opt$num, "/template.Rmd"))
