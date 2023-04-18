@@ -83,12 +83,6 @@ fit_model <- function(data,
                  seed = seed,
                  pars = c("betaTheta", "SigmaTheta", "ObsVar"),
                  include = TRUE)
-    if(get_num_divergent(fit) > 0){
-      cat("Divergent transitions were found")
-      fit <- NA
-    }else{
-      fit <- summary(fit$fit)$summary 
-    }
     },
     error = function(e){
       fit <- NA
@@ -119,6 +113,18 @@ if(!file.exists("SimFits.RDS")){
 fail_idx <- sapply(fits, is.na)
 sum(fail_idx)
 fits <- fits[!fail_idx]
+
+sfits <- lapply(fits, function(x){
+  if(!is.na(x)){
+    summary(x$fit)$summary 
+  }else{
+    NA
+  }
+    
+  })
+
+ndiv <- sapply(fits, function(x) {get_num_divergent(x$fit)})
+sum(ndiv > 0)
 ```
 
 ```{r get true params}
@@ -145,9 +151,9 @@ cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
   cvr <- ci_lwr <= params & ci_upr >= params
 }
 
-post_mean_bias <- sapply(fits, bias_calc, truth = truth, colname = "mean")
-post_median_bias <- sapply(fits, bias_calc, truth = truth, colname = "50%")
-cvr <- sapply(fits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
+post_mean_bias <- sapply(sfits, bias_calc, truth = truth, colname = "mean")
+post_median_bias <- sapply(sfits, bias_calc, truth = truth, colname = "50%")
+cvr <- sapply(sfits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
 
 result <- rbind(apply(post_mean_bias, 1 , mean),
                 apply(post_median_bias,1, mean),

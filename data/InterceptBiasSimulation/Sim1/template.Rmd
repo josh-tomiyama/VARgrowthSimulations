@@ -115,7 +115,12 @@ sum(fail_idx)
 fits <- fits[!fail_idx]
 
 sfits <- lapply(fits, function(x){
+  if(!is.na(x)){
     summary(x$fit)$summary 
+  }else{
+    NA
+  }
+    
   })
 
 ndiv <- sapply(fits, function(x) {get_num_divergent(x$fit)})
