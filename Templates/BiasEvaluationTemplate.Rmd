@@ -26,7 +26,7 @@ library(brms)
 ```{r fit model}
 data <- readRDS("./SimData.RDS")
 nchains = 4
-iter = 5000
+iter = 500
 warmup = 0.5*iter
 seed = 123123
 ctrl <- list(adapt_delta = 0.9)
@@ -85,9 +85,10 @@ fit_model <- function(data,
                  include = TRUE)
     },
     error = function(e){
-      fit <- NA
+      fit <- NULL
     }
   )
+  fit
   
 }
 
@@ -110,30 +111,22 @@ if(!file.exists("SimFits.RDS")){
   fits <- readRDS("SimFits.RDS")
 }
 
-fail_idx <- sapply(fits, is.na)
-sum(fail_idx)
-fits <- fits[!fail_idx]
+num <- length(fits)
+num - length(data)
 
 sfits <- lapply(fits, function(x){
-  if(!is.na(x)){
     summary(x$fit)$summary 
-  }else{
-    NA
-  }
-    
   })
 
 ndiv <- sapply(fits, function(x) {get_num_divergent(x$fit)})
 sum(ndiv > 0)
+sum(ndiv)
 ```
 
 ```{r get true params}
 truth <- readRDS("./Truth.RDS")
 
 bias_calc <- function(fit_summary, truth, colname){
-  if(is.na(fit_summary)){
-    return(NA)
-  }
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
   post_est <- fit_summary[1:7, which(colnames(fit_summary) == colname)]
   bias <- as.numeric(post_est - params)
@@ -142,9 +135,6 @@ bias_calc <- function(fit_summary, truth, colname){
 }
 
 cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
-  if(is.na(fit_summary)){
-    return(NA)
-  }
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
   ci_lwr <- fit_summary[1:7, which(colnames(fit_summary) == lwr_name)]
   ci_upr <- fit_summary[1:7, which(colnames(fit_summary) == upr_name)]
