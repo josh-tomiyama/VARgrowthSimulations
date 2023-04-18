@@ -2,10 +2,10 @@ library(optparse)
 library(markdown)
 option_list <- list(
   make_option(c("-t", "--template"), type = "character",
-              default = "./Templates/BiasEvaluationTemplate.Rmd", help = "config file path",
+              default = "../Templates/BiasEvaluationTemplate.Rmd", help = "config file path",
               metavar="character"),
   make_option(c("-d", "--dir"), type = "character",
-              default = "./data/InterceptBiasSimulation/", help = "config file path",
+              default = "../data/InterceptBiasSimulation/", help = "config file path",
               metavar="character"),
   make_option(c("-n", "--num"), type = "integer",
               default = 1, help = "config file path",
