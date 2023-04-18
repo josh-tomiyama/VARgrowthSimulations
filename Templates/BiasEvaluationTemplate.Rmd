@@ -26,7 +26,7 @@ library(brms)
 ```{r fit model}
 data <- readRDS("./SimData.RDS")
 nchains = 4
-iter = 500
+iter = 5000
 warmup = 0.5*iter
 seed = 123123
 ctrl <- list(adapt_delta = 0.9)
