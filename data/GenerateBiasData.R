@@ -1,7 +1,7 @@
 library(VARgrowth)
 library(dplyr)
 
-ntpt = c(15, 30, 50, 100)
+ntpt = c(50, 100)
 U = c(10, 25, 50)
 nreps = 50
 
@@ -82,7 +82,7 @@ simplify = FALSE)
 
 derivs <- apply(mean_param_grid, 1, function(row){
   function(t){
-     row[1]*exp(-row[2]*row[3]^t)*(-row[2]*log(row[3])*row[3]^t) - 0.01*row[1]
+     row[1]*exp(-row[2]*row[3]^t)*(-row[2]*log(row[3])*row[3]^t) - 0.001*row[1]
   }
 })
 
