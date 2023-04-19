@@ -125,6 +125,7 @@ sum(ndiv)
 
 ```{r get true params}
 truth <- readRDS("./Truth.RDS")
+truth
 
 bias_calc <- function(fit_summary, truth, colname){
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
