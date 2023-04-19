@@ -29,7 +29,7 @@ nchains = 4
 iter = 5000
 warmup = 0.5*iter
 seed = 123123
-ctrl <- list(adapt_delta = 0.9)
+ctrl <- list(adapt_delta = 0.95)
 
 fit_model <- function(data, 
                       nchains, 
@@ -54,7 +54,7 @@ fit_model <- function(data,
 
   pSigmaTheta <- PriorSigmaTheta(rep(list(NormalPrior()), numMeanParams),
                          priorParam1 = rep(0, numMeanParams),
-                         priorParam2 = rep(100, numMeanParams))
+                         priorParam2 = rep(5, numMeanParams))
 
   PriorList <- list(pTheta,
                     pObsVar,
@@ -118,6 +118,8 @@ sfits <- lapply(fits, function(x){
     summary(x$fit)$summary 
   })
 
+saveRDS(sfits, "SummaryFits.RDS")
+
 ndiv <- sapply(fits, function(x) {get_num_divergent(x$fit)})
 sum(ndiv > 0)
 sum(ndiv)
@@ -125,6 +127,7 @@ sum(ndiv)
 
 ```{r get true params}
 truth <- readRDS("./Truth.RDS")
+truth
 
 bias_calc <- function(fit_summary, truth, colname){
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
