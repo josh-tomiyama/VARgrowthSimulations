@@ -1,7 +1,7 @@
 library(VARgrowth)
 library(dplyr)
 
-ntpt = c(50, 100)
+ntpt = c(25, 50, 100)
 U = c(10, 25, 50)
 nreps = 50
 
