@@ -233,9 +233,9 @@ fit_model &lt;- function(data,
   pTheta &lt;- PriorTheta(rep(list(NoPrior()), numMeanParams),
                      priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
                      priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
-  pObsVar &lt;- PriorObsVar(list(NormalPrior()),
-                       priorParam1 = 0,
-                       priorParam2 = 1000)
+  pObsVar &lt;- PriorObsVar(list(InvGammaPrior()),
+                       priorParam1 = 2,
+                       priorParam2 = 2)
   pBeta &lt;- PriorBetaTheta(list(NormalPrior()),
                priorParam1 = matrix(0, 1, numMeanParams),
                priorParam2 = matrix(5, 1, numMeanParams))
@@ -271,17 +271,12 @@ fit_model &lt;- function(data,
                  seed = seed,
                  pars = c(&quot;betaTheta&quot;, &quot;SigmaTheta&quot;, &quot;ObsVar&quot;),
                  include = TRUE)
-    if(get_num_divergent(fit) &gt; 0){
-      cat(&quot;Divergent transitions were found&quot;)
-      fit &lt;- NA
-    }else{
-      fit &lt;- summary(fit$fit)$summary 
-    }
     },
     error = function(e){
-      fit &lt;- NA
+      fit &lt;- NULL
     }
   )
+  fit
   
 }</code></pre>
 <pre class="r"><code>data &lt;- readRDS(&quot;./SimData.RDS&quot;)
@@ -298,7 +293,422 @@ if(!file.exists(&quot;SimFits.RDS&quot;)){
 }else{
   fits &lt;- readRDS(&quot;SimFits.RDS&quot;)
 }
-</code></pre>
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 69 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 72 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 162 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 16 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 48 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 21 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 1 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 60 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 5 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 37 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 29 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 5 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 9 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 221 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 53 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 49 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 906 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: The largest R-hat is 1.21, indicating chains have not mixed.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#r-hat
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 3 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 82 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 453 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: The largest R-hat is 1.07, indicating chains have not mixed.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#r-hat
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 60 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 24 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 41 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 4 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 57 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 28 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 13 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 83 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 2 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 3 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 48 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 5 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 8 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 3 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 39 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 43 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 2 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 32 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 3 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 129 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 190 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: There were 3 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 9 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 27 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#&gt; Running the chains for more iterations may help. See
+#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 29 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 15 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+
+num &lt;- length(fits)
+num - length(data)
+#&gt; [1] 0
+
+sfits &lt;- lapply(fits, function(x){
+    summary(x$fit)$summary 
+  })
+
+ndiv &lt;- sapply(fits, function(x) {get_num_divergent(x$fit)})
+sum(ndiv &gt; 0)
+#&gt; [1] 48
+sum(ndiv)
+#&gt; [1] 3200</code></pre>
 <pre class="r"><code>truth &lt;- readRDS(&quot;./Truth.RDS&quot;)
 
 bias_calc &lt;- function(fit_summary, truth, colname){
@@ -313,15 +723,15 @@ cvr_calc &lt;- function(fit_summary, truth, lwr_name, upr_name){
   params &lt;- truth[,c(&quot;Asym&quot;, &quot;offset&quot;, &quot;growth&quot;, &quot;var_param1&quot;, &quot;var_param2&quot;, &quot;var_param3&quot;, &quot;obs_vars&quot;)]
   ci_lwr &lt;- fit_summary[1:7, which(colnames(fit_summary) == lwr_name)]
   ci_upr &lt;- fit_summary[1:7, which(colnames(fit_summary) == upr_name)]
-  cvr = ci_lwr &lt;= params &amp; ci_upr &gt;= params
+  cvr &lt;- ci_lwr &lt;= params &amp; ci_upr &gt;= params
 }
 
-post_mean_bias &lt;- sapply(fits, bias_calc, truth = truth, colname = &quot;mean&quot;)
-post_median_bias &lt;- sapply(fits, bias_calc, truth = truth, colname = &quot;50%&quot;)
-cvr &lt;- sapply(fits, cvr_calc, truth = truth, lwr_name = &quot;2.5%&quot;, upr_name = &quot;97.5%&quot;)
+post_mean_bias &lt;- sapply(sfits, bias_calc, truth = truth, colname = &quot;mean&quot;)
+post_median_bias &lt;- sapply(sfits, bias_calc, truth = truth, colname = &quot;50%&quot;)
+cvr &lt;- sapply(sfits, cvr_calc, truth = truth, lwr_name = &quot;2.5%&quot;, upr_name = &quot;97.5%&quot;)
 
 result &lt;- rbind(apply(post_mean_bias, 1 , mean),
-                apply(post_median_bias,1, median),
+                apply(post_median_bias,1, mean),
                 apply(cvr, 1, mean))
 result &lt;- as.data.frame(result)
 colnames(truth) &lt;- paste0(&quot;true_&quot;, colnames(truth))
