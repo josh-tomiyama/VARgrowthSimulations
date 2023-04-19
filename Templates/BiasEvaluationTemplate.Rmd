@@ -118,6 +118,8 @@ sfits <- lapply(fits, function(x){
     summary(x$fit)$summary 
   })
 
+saveRDS(sfits, "SummaryFits.RDS")
+
 ndiv <- sapply(fits, function(x) {get_num_divergent(x$fit)})
 sum(ndiv > 0)
 sum(ndiv)
