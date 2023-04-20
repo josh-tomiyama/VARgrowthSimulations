@@ -25,11 +25,11 @@ library(brms)
 
 ```{r fit model}
 data <- readRDS("./SimData.RDS")
-nchains = 4
-iter = 5000
+nchains = 1
+iter = 2000
 warmup = 0.5*iter
 seed = 123123
-ctrl <- list(adapt_delta = 0.95)
+ctrl <- list(adapt_delta = 0.90)
 
 fit_model <- function(data, 
                       nchains, 
@@ -46,15 +46,15 @@ fit_model <- function(data,
                      priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
                      priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
   pObsVar <- PriorObsVar(list(InvGammaPrior()),
-                       priorParam1 = 2,
-                       priorParam2 = 2)
+                       priorParam1 = .01,
+                       priorParam2 = .01)
   pBeta <- PriorBetaTheta(list(NormalPrior()),
                priorParam1 = matrix(0, 1, numMeanParams),
                priorParam2 = matrix(5, 1, numMeanParams))
 
   pSigmaTheta <- PriorSigmaTheta(rep(list(NormalPrior()), numMeanParams),
                          priorParam1 = rep(0, numMeanParams),
-                         priorParam2 = rep(5, numMeanParams))
+                         priorParam2 = rep(0.5, numMeanParams))
 
   PriorList <- list(pTheta,
                     pObsVar,
@@ -125,6 +125,19 @@ sum(ndiv > 0)
 sum(ndiv)
 ```
 
+```{r}
+if (length(fits) == 1){
+  sf <- fits[[1]]$fit
+  traceplot(sf, "ObsVar")
+  traceplot(sf, "SigmaTheta")
+  traceplot(sf, "betaTheta[1,1]")
+  traceplot(sf, "betaTheta[1,2]")
+  traceplot(sf, "betaTheta[1,3]")
+  sfits
+}
+```
+
+
 ```{r get true params}
 truth <- readRDS("./Truth.RDS")
 truth
@@ -144,18 +157,22 @@ cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
   cvr <- ci_lwr <= params & ci_upr >= params
 }
 
-post_mean_bias <- sapply(sfits, bias_calc, truth = truth, colname = "mean")
-post_median_bias <- sapply(sfits, bias_calc, truth = truth, colname = "50%")
-cvr <- sapply(sfits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
+if(length(sFits) != 1){
+  post_mean_bias <- sapply(sfits, bias_calc, truth = truth, colname = "mean")
+  post_median_bias <- sapply(sfits, bias_calc, truth = truth, colname = "50%")
+  cvr <- sapply(sfits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
 
-result <- rbind(apply(post_mean_bias, 1 , mean),
-                apply(post_median_bias,1, mean),
-                apply(cvr, 1, mean))
-result <- as.data.frame(result)
-colnames(truth) <- paste0("true_", colnames(truth))
-result <- cbind(result, truth[rep(1, nrow(result)),])
-result$type <- c("post_mean_bias", "post_median_bias", "coverage")
-saveRDS(result, "Result.RDS")
+  result <- rbind(apply(post_mean_bias, 1 , mean),
+                  apply(post_median_bias,1, mean),
+                  apply(cvr, 1, mean))
+  result <- as.data.frame(result)
+  colnames(truth) <- paste0("true_", colnames(truth))
+  result <- cbind(result, truth[rep(1, nrow(result)),])
+  result$type <- c("post_mean_bias", "post_median_bias", "coverage")
+  saveRDS(result, "Result.RDS")
+}
+
+
 ```
 
 
