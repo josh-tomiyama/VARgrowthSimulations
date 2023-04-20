@@ -46,8 +46,8 @@ fit_model <- function(data,
                      priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
                      priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
   pObsVar <- PriorObsVar(list(InvGammaPrior()),
-                       priorParam1 = 2,
-                       priorParam2 = 2)
+                       priorParam1 = .01,
+                       priorParam2 = .01)
   pBeta <- PriorBetaTheta(list(NormalPrior()),
                priorParam1 = matrix(0, 1, numMeanParams),
                priorParam2 = matrix(5, 1, numMeanParams))
@@ -126,13 +126,14 @@ sum(ndiv)
 ```
 
 ```{r}
-if (length(fits == 1)){
+if (length(fits) == 1){
   sf <- fits[[1]]$fit
   traceplot(sf, "ObsVar")
   traceplot(sf, "SigmaTheta")
   traceplot(sf, "betaTheta[1,1]")
   traceplot(sf, "betaTheta[1,2]")
   traceplot(sf, "betaTheta[1,3]")
+  sfits
 }
 ```
 
