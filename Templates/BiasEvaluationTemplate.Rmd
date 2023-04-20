@@ -54,7 +54,7 @@ fit_model <- function(data,
 
   pSigmaTheta <- PriorSigmaTheta(rep(list(NormalPrior()), numMeanParams),
                          priorParam1 = rep(0, numMeanParams),
-                         priorParam2 = rep(5, numMeanParams))
+                         priorParam2 = rep(0.5, numMeanParams))
 
   PriorList <- list(pTheta,
                     pObsVar,
