@@ -3,7 +3,7 @@ library(dplyr)
 
 ntpt = c(25, 50, 100)
 U = c(10, 25, 50)
-nreps = 50
+nreps = 1
 
 generate_data <- function(seed, tstart, tend, beta, sigma_theta, obsVar, ntpt, U){
   dat <- data.frame(myTime = rep(seq(from = tstart,
@@ -52,7 +52,7 @@ offset <- c(2)
 growth <- c(0.4, 0.7)
 
 mean_param_grid <- expand.grid(Asym, offset, growth)
-var_param <- c(0.05)^2
+var_param <- c(0.02)^2
 var_param_grid <- expand.grid(var_param, var_param, var_param)
 obs_vars <- c(100) ^ 2
 
