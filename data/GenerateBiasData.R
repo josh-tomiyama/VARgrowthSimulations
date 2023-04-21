@@ -1,9 +1,9 @@
 library(VARgrowth)
 library(dplyr)
 
-ntpt = c(25, 50, 100)
+ntpt = c(10, 25, 50, 100)
 U = c(10, 25, 50)
-nreps = 1
+nreps = 50
 
 generate_data <- function(seed, tstart, tend, beta, sigma_theta, obsVar, ntpt, U){
   dat <- data.frame(myTime = rep(seq(from = tstart,
