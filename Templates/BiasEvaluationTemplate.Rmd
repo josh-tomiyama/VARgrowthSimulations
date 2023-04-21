@@ -163,12 +163,15 @@ check_converge <- function(fit_summary, threshold = 1.05){
   any(r_hat >= 1.05)
 }
 
-sfits <- sfits[ndiv > 0]
+sfits <- sfits[ndiv == 0]
 
-conv_idx <- check_converge(sfits)
-sfits <- sfits[conv_idx]
+if(length(sfits) > 0){
+  conv_idx <- check_converge(sfits)
+  sfits <- sfits[conv_idx]
+}
+
 diagnostics <- data.frame(num_sampler_problem = num_sampler_problem,
-           num_converge = sum(conv_idx))
+           num_converge = ifelse(exists("conv_idx"), sum(conv_idx), 0))
 saveRDS(diagnostics, "FitsDiagnostics.RDS")
 
 
