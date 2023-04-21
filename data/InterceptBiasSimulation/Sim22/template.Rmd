@@ -29,7 +29,7 @@ nchains = 4
 iter = 5000
 warmup = 0.5*iter
 seed = 123123
-ctrl <- list(adapt_delta = 0.9)
+ctrl <- list(adapt_delta = 0.90)
 
 fit_model <- function(data, 
                       nchains, 
@@ -46,15 +46,15 @@ fit_model <- function(data,
                      priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
                      priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
   pObsVar <- PriorObsVar(list(InvGammaPrior()),
-                       priorParam1 = 2,
-                       priorParam2 = 2)
+                       priorParam1 = .01,
+                       priorParam2 = .01)
   pBeta <- PriorBetaTheta(list(NormalPrior()),
                priorParam1 = matrix(0, 1, numMeanParams),
                priorParam2 = matrix(5, 1, numMeanParams))
 
   pSigmaTheta <- PriorSigmaTheta(rep(list(NormalPrior()), numMeanParams),
                          priorParam1 = rep(0, numMeanParams),
-                         priorParam2 = rep(100, numMeanParams))
+                         priorParam2 = rep(10, numMeanParams))
 
   PriorList <- list(pTheta,
                     pObsVar,
@@ -118,13 +118,30 @@ sfits <- lapply(fits, function(x){
     summary(x$fit)$summary 
   })
 
+saveRDS(sfits, "SummaryFits.RDS")
+
 ndiv <- sapply(fits, function(x) {get_num_divergent(x$fit)})
-sum(ndiv > 0)
+num_sampler_problem <- sum(ndiv > 0)
+num_sampler_problem
 sum(ndiv)
 ```
 
+```{r}
+if (length(fits) == 1){
+  sf <- fits[[1]]$fit
+  traceplot(sf, "ObsVar")
+  traceplot(sf, "SigmaTheta")
+  traceplot(sf, "betaTheta[1,1]")
+  traceplot(sf, "betaTheta[1,2]")
+  traceplot(sf, "betaTheta[1,3]")
+  sfits
+}
+```
+
+
 ```{r get true params}
 truth <- readRDS("./Truth.RDS")
+truth
 
 bias_calc <- function(fit_summary, truth, colname){
   params <- truth[,c("Asym", "offset", "growth", "var_param1", "var_param2", "var_param3", "obs_vars")]
@@ -141,18 +158,41 @@ cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
   cvr <- ci_lwr <= params & ci_upr >= params
 }
 
-post_mean_bias <- sapply(sfits, bias_calc, truth = truth, colname = "mean")
-post_median_bias <- sapply(sfits, bias_calc, truth = truth, colname = "50%")
-cvr <- sapply(sfits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
+check_converge <- function(fit_summary, threshold = 1.05){
+  r_hat <- fit_summary[1:7, which(colnames(fit_summary) == "Rhat")]
+  any(r_hat >= 1.05)
+}
 
-result <- rbind(apply(post_mean_bias, 1 , mean),
-                apply(post_median_bias,1, mean),
-                apply(cvr, 1, mean))
-result <- as.data.frame(result)
-colnames(truth) <- paste0("true_", colnames(truth))
-result <- cbind(result, truth[rep(1, nrow(result)),])
-result$type <- c("post_mean_bias", "post_median_bias", "coverage")
-saveRDS(result, "Result.RDS")
+sfits <- sfits[ndiv == 0]
+
+if(length(sfits) > 0){
+  conv_idx <- check_converge(sfits)
+  sfits <- sfits[conv_idx]
+}
+
+diagnostics <- data.frame(num_sampler_problem = num_sampler_problem,
+           num_converge = ifelse(exists("conv_idx"), sum(conv_idx), 0))
+saveRDS(diagnostics, "FitsDiagnostics.RDS")
+
+
+if(length(sfits) > 0){
+  
+  post_mean_bias <- sapply(sfits, bias_calc, truth = truth, colname = "mean")
+  post_median_bias <- sapply(sfits, bias_calc, truth = truth, colname = "50%")
+  cvr <- sapply(sfits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
+
+  result <- rbind(apply(post_mean_bias, 1 , mean),
+                  apply(post_median_bias,1, mean),
+                  apply(cvr, 1, mean))
+  result <- as.data.frame(result)
+  colnames(truth) <- paste0("true_", colnames(truth))
+  result <- cbind(result, truth[rep(1, nrow(result)),])
+  result$type <- c("post_mean_bias", "post_median_bias", "coverage")
+  result$nreps <- length(sfits)
+  saveRDS(result, "Result.RDS")
+}
+
+
 ```
 
 
