@@ -25,8 +25,8 @@ library(brms)
 
 ```{r fit model}
 data <- readRDS("./SimData.RDS")
-nchains = 1
-iter = 2000
+nchains = 4
+iter = 5000
 warmup = 0.5*iter
 seed = 123123
 ctrl <- list(adapt_delta = 0.90)
@@ -54,7 +54,7 @@ fit_model <- function(data,
 
   pSigmaTheta <- PriorSigmaTheta(rep(list(NormalPrior()), numMeanParams),
                          priorParam1 = rep(0, numMeanParams),
-                         priorParam2 = rep(0.5, numMeanParams))
+                         priorParam2 = rep(10, numMeanParams))
 
   PriorList <- list(pTheta,
                     pObsVar,
