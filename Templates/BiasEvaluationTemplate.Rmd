@@ -121,7 +121,8 @@ sfits <- lapply(fits, function(x){
 saveRDS(sfits, "SummaryFits.RDS")
 
 ndiv <- sapply(fits, function(x) {get_num_divergent(x$fit)})
-sum(ndiv > 0)
+num_sampler_problem <- sum(ndiv > 0)
+num_sampler_problem
 sum(ndiv)
 ```
 
@@ -157,7 +158,22 @@ cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
   cvr <- ci_lwr <= params & ci_upr >= params
 }
 
-if(length(sFits) != 1){
+check_converge <- function(fit_summary, threshold = 1.05){
+  r_hat <- fit_summary[1:7, which(colnames(fit_summary) == "Rhat")]
+  any(r_hat >= 1.05)
+}
+
+sfits <- sfits[ndiv > 0]
+
+conv_idx <- check_converge(sfits)
+sfits <- sfits[conv_idx]
+diagnostics <- data.frame(num_sampler_problem = num_sampler_problem,
+           num_converge = sum(conv_idx))
+saveRDS(diagnostics, "FitsDiagnostics.RDS")
+
+
+if(length(sfits) > 0){
+  
   post_mean_bias <- sapply(sfits, bias_calc, truth = truth, colname = "mean")
   post_median_bias <- sapply(sfits, bias_calc, truth = truth, colname = "50%")
   cvr <- sapply(sfits, cvr_calc, truth = truth, lwr_name = "2.5%", upr_name = "97.5%")
@@ -169,6 +185,7 @@ if(length(sFits) != 1){
   colnames(truth) <- paste0("true_", colnames(truth))
   result <- cbind(result, truth[rep(1, nrow(result)),])
   result$type <- c("post_mean_bias", "post_median_bias", "coverage")
+  result$nreps <- length(sfits)
   saveRDS(result, "Result.RDS")
 }
 
