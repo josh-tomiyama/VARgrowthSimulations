@@ -217,7 +217,7 @@ nchains = 4
 iter = 5000
 warmup = 0.5*iter
 seed = 123123
-ctrl &lt;- list(adapt_delta = 0.9)
+ctrl &lt;- list(adapt_delta = 0.90)
 
 fit_model &lt;- function(data, 
                       nchains, 
@@ -234,15 +234,15 @@ fit_model &lt;- function(data,
                      priorParam1 = matrix(0, nrow = totalGroups, ncol = numMeanParams), 
                      priorParam2 = matrix(0, nrow = totalGroups, ncol = numMeanParams))
   pObsVar &lt;- PriorObsVar(list(InvGammaPrior()),
-                       priorParam1 = 2,
-                       priorParam2 = 2)
+                       priorParam1 = .01,
+                       priorParam2 = .01)
   pBeta &lt;- PriorBetaTheta(list(NormalPrior()),
                priorParam1 = matrix(0, 1, numMeanParams),
                priorParam2 = matrix(5, 1, numMeanParams))
 
   pSigmaTheta &lt;- PriorSigmaTheta(rep(list(NormalPrior()), numMeanParams),
                          priorParam1 = rep(0, numMeanParams),
-                         priorParam2 = rep(100, numMeanParams))
+                         priorParam2 = rep(10, numMeanParams))
 
   PriorList &lt;- list(pTheta,
                     pObsVar,
@@ -293,282 +293,6 @@ if(!file.exists(&quot;SimFits.RDS&quot;)){
 }else{
   fits &lt;- readRDS(&quot;SimFits.RDS&quot;)
 }
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 13 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 29 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 10 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 5 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 92 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 2 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 48 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 1 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 78 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 3 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 61 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 31 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 1 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 23 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 1 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 84 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 2 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 33 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 38 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 63 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 40 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 11 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 8 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 22 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 1 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 80 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#&gt; Running the chains for more iterations may help. See
-#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 73 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 4 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 102 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 292 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#&gt; Running the chains for more iterations may help. See
-#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess
-#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-#&gt; Running the chains for more iterations may help. See
-#&gt; https://mc-stan.org/misc/warnings.html#tail-ess
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 101 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 35 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 51 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 17 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 13 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 100 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 45 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 21 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 3 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 22 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 88 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 4 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 38 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Warning: There were 15 divergent transitions after warmup. See
-#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-#&gt; to find out why this is a problem and how to eliminate them.
-
-#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
-#&gt; Joining with `by = join_by(group)`
-#&gt; Joining with `by = join_by(group)`
 
 num &lt;- length(fits)
 num - length(data)
@@ -578,12 +302,29 @@ sfits &lt;- lapply(fits, function(x){
     summary(x$fit)$summary 
   })
 
+saveRDS(sfits, &quot;SummaryFits.RDS&quot;)
+
 ndiv &lt;- sapply(fits, function(x) {get_num_divergent(x$fit)})
-sum(ndiv &gt; 0)
-#&gt; [1] 44
+num_sampler_problem &lt;- sum(ndiv &gt; 0)
+num_sampler_problem
+#&gt; [1] 0
 sum(ndiv)
-#&gt; [1] 1804</code></pre>
+#&gt; [1] 0</code></pre>
+<pre class="r"><code>if (length(fits) == 1){
+  sf &lt;- fits[[1]]$fit
+  traceplot(sf, &quot;ObsVar&quot;)
+  traceplot(sf, &quot;SigmaTheta&quot;)
+  traceplot(sf, &quot;betaTheta[1,1]&quot;)
+  traceplot(sf, &quot;betaTheta[1,2]&quot;)
+  traceplot(sf, &quot;betaTheta[1,3]&quot;)
+  sfits
+}</code></pre>
 <pre class="r"><code>truth &lt;- readRDS(&quot;./Truth.RDS&quot;)
+truth
+#&gt;    ntpt  U     Asym    offset    growth var_param1 var_param2 var_param3
+#&gt; 19   50 25 9.903488 0.6931472 0.8472979      4e-04      4e-04      4e-04
+#&gt;    obs_vars tstart tend
+#&gt; 19    10000     -4   19
 
 bias_calc &lt;- function(fit_summary, truth, colname){
   params &lt;- truth[,c(&quot;Asym&quot;, &quot;offset&quot;, &quot;growth&quot;, &quot;var_param1&quot;, &quot;var_param2&quot;, &quot;var_param3&quot;, &quot;obs_vars&quot;)]
@@ -600,18 +341,44 @@ cvr_calc &lt;- function(fit_summary, truth, lwr_name, upr_name){
   cvr &lt;- ci_lwr &lt;= params &amp; ci_upr &gt;= params
 }
 
-post_mean_bias &lt;- sapply(sfits, bias_calc, truth = truth, colname = &quot;mean&quot;)
-post_median_bias &lt;- sapply(sfits, bias_calc, truth = truth, colname = &quot;50%&quot;)
-cvr &lt;- sapply(sfits, cvr_calc, truth = truth, lwr_name = &quot;2.5%&quot;, upr_name = &quot;97.5%&quot;)
+check_converge &lt;- function(fit_summary, threshold = 1.05){
+  r_hat &lt;- fit_summary[1:7, which(colnames(fit_summary) == &quot;Rhat&quot;)]
+  all(r_hat &lt; 1.05)
+}
 
-result &lt;- rbind(apply(post_mean_bias, 1 , mean),
-                apply(post_median_bias,1, mean),
-                apply(cvr, 1, mean))
-result &lt;- as.data.frame(result)
-colnames(truth) &lt;- paste0(&quot;true_&quot;, colnames(truth))
-result &lt;- cbind(result, truth[rep(1, nrow(result)),])
-result$type &lt;- c(&quot;post_mean_bias&quot;, &quot;post_median_bias&quot;, &quot;coverage&quot;)
-saveRDS(result, &quot;Result.RDS&quot;)</code></pre>
+sfits &lt;- sfits[ndiv == 0]
+
+if(length(sfits) &gt; 0){
+  conv_idx &lt;- sapply(sfits, check_converge)
+  sfits &lt;- sfits[conv_idx]
+}else{
+  cat(&quot;All replications had sampler issues&quot;)
+}
+
+diagnostics &lt;- data.frame(num_sampler_problem = num_sampler_problem,
+           num_converge = ifelse(exists(&quot;conv_idx&quot;), sum(conv_idx), 0))
+saveRDS(diagnostics, &quot;FitsDiagnostics.RDS&quot;)
+
+
+if(length(sfits) &gt; 0){
+  
+  post_mean_bias &lt;- sapply(sfits, bias_calc, truth = truth, colname = &quot;mean&quot;)
+  post_median_bias &lt;- sapply(sfits, bias_calc, truth = truth, colname = &quot;50%&quot;)
+  cvr &lt;- sapply(sfits, cvr_calc, truth = truth, lwr_name = &quot;2.5%&quot;, upr_name = &quot;97.5%&quot;)
+
+  result &lt;- rbind(apply(post_mean_bias, 1 , mean),
+                  apply(post_median_bias,1, mean),
+                  apply(cvr, 1, mean))
+  result &lt;- as.data.frame(result)
+  colnames(truth) &lt;- paste0(&quot;true_&quot;, colnames(truth))
+  result &lt;- cbind(result, truth[rep(1, nrow(result)),])
+  result$type &lt;- c(&quot;post_mean_bias&quot;, &quot;post_median_bias&quot;, &quot;coverage&quot;)
+  result$nreps &lt;- length(sfits)
+  saveRDS(result, &quot;Result.RDS&quot;)
+}else{
+  cat(&quot;All replications did not have convergent chains&quot;)
+}
+</code></pre>
 
 
 

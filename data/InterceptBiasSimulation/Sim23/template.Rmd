@@ -160,14 +160,16 @@ cvr_calc <- function(fit_summary, truth, lwr_name, upr_name){
 
 check_converge <- function(fit_summary, threshold = 1.05){
   r_hat <- fit_summary[1:7, which(colnames(fit_summary) == "Rhat")]
-  any(r_hat >= 1.05)
+  all(r_hat < 1.05)
 }
 
 sfits <- sfits[ndiv == 0]
 
 if(length(sfits) > 0){
-  conv_idx <- check_converge(sfits)
+  conv_idx <- sapply(sfits, check_converge)
   sfits <- sfits[conv_idx]
+}else{
+  cat("All replications had sampler issues")
 }
 
 diagnostics <- data.frame(num_sampler_problem = num_sampler_problem,
@@ -190,6 +192,8 @@ if(length(sfits) > 0){
   result$type <- c("post_mean_bias", "post_median_bias", "coverage")
   result$nreps <- length(sfits)
   saveRDS(result, "Result.RDS")
+}else{
+  cat("All replications did not have convergent chains")
 }
 
 

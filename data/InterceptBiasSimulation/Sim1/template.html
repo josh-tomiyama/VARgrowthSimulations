@@ -343,15 +343,18 @@ cvr_calc &lt;- function(fit_summary, truth, lwr_name, upr_name){
 
 check_converge &lt;- function(fit_summary, threshold = 1.05){
   r_hat &lt;- fit_summary[1:7, which(colnames(fit_summary) == &quot;Rhat&quot;)]
-  any(r_hat &gt;= 1.05)
+  all(r_hat &lt; 1.05)
 }
 
 sfits &lt;- sfits[ndiv == 0]
 
 if(length(sfits) &gt; 0){
-  conv_idx &lt;- check_converge(sfits)
+  conv_idx &lt;- sapply(sfits, check_converge)
   sfits &lt;- sfits[conv_idx]
+}else{
+  cat(&quot;All replications had sampler issues&quot;)
 }
+#&gt; All replications had sampler issues
 
 diagnostics &lt;- data.frame(num_sampler_problem = num_sampler_problem,
            num_converge = ifelse(exists(&quot;conv_idx&quot;), sum(conv_idx), 0))
@@ -373,8 +376,10 @@ if(length(sfits) &gt; 0){
   result$type &lt;- c(&quot;post_mean_bias&quot;, &quot;post_median_bias&quot;, &quot;coverage&quot;)
   result$nreps &lt;- length(sfits)
   saveRDS(result, &quot;Result.RDS&quot;)
+}else{
+  cat(&quot;All replications did not have convergent chains&quot;)
 }
-</code></pre>
+#&gt; All replications did not have convergent chains</code></pre>
 
 
 
