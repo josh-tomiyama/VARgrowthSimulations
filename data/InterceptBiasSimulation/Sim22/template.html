@@ -217,7 +217,7 @@ nchains = 4
 iter = 5000
 warmup = 0.5*iter
 seed = 123123
-ctrl &lt;- list(adapt_delta = 0.90)
+ctrl &lt;- list(adapt_delta = 0.95)
 
 fit_model &lt;- function(data, 
                       nchains, 
@@ -255,7 +255,7 @@ fit_model &lt;- function(data,
                                          inverse = FALSE)
   
   ### model 1: intercept model
-  ThetaTrend &lt;- LinearModelTrend(data, ~ 1)
+  ThetaTrend &lt;- LinearModelTrend(data, ~ 1, non_centered = TRUE)
   ### reduce to just post mean, post median, credible interval, sampler errors
   tryCatch(
     {fit &lt;- VARGrowth(data,
@@ -293,6 +293,123 @@ if(!file.exists(&quot;SimFits.RDS&quot;)){
 }else{
   fits &lt;- readRDS(&quot;SimFits.RDS&quot;)
 }
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 4 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 5 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 3 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 3 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 17 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 5 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 54 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 4 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 2 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 2 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 25 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 36 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 1 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 2 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 12 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 23 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning: There were 1 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
+#&gt; Joining with `by = join_by(group)`
 
 num &lt;- length(fits)
 num - length(data)

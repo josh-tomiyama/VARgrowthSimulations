@@ -217,7 +217,7 @@ nchains = 4
 iter = 5000
 warmup = 0.5*iter
 seed = 123123
-ctrl &lt;- list(adapt_delta = 0.90)
+ctrl &lt;- list(adapt_delta = 0.95)
 
 fit_model &lt;- function(data, 
                       nchains, 
@@ -255,7 +255,7 @@ fit_model &lt;- function(data,
                                          inverse = FALSE)
   
   ### model 1: intercept model
-  ThetaTrend &lt;- LinearModelTrend(data, ~ 1)
+  ThetaTrend &lt;- LinearModelTrend(data, ~ 1, non_centered = TRUE)
   ### reduce to just post mean, post median, credible interval, sampler errors
   tryCatch(
     {fit &lt;- VARGrowth(data,
@@ -293,6 +293,462 @@ if(!file.exists(&quot;SimFits.RDS&quot;)){
 }else{
   fits &lt;- readRDS(&quot;SimFits.RDS&quot;)
 }
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Singular precision matrix in level -1, block 1
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 2 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 2 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 3 divergent transitions after warmup. See
+#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#&gt; to find out why this is a problem and how to eliminate them.
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
 
 num &lt;- length(fits)
 num - length(data)
@@ -307,9 +763,9 @@ saveRDS(sfits, &quot;SummaryFits.RDS&quot;)
 ndiv &lt;- sapply(fits, function(x) {get_num_divergent(x$fit)})
 num_sampler_problem &lt;- sum(ndiv &gt; 0)
 num_sampler_problem
-#&gt; [1] 50
+#&gt; [1] 9
 sum(ndiv)
-#&gt; [1] 6987</code></pre>
+#&gt; [1] 13</code></pre>
 <pre class="r"><code>if (length(fits) == 1){
   sf &lt;- fits[[1]]$fit
   traceplot(sf, &quot;ObsVar&quot;)
@@ -354,7 +810,6 @@ if(length(sfits) &gt; 0){
 }else{
   cat(&quot;All replications had sampler issues&quot;)
 }
-#&gt; All replications had sampler issues
 
 diagnostics &lt;- data.frame(num_sampler_problem = num_sampler_problem,
            num_converge = ifelse(exists(&quot;conv_idx&quot;), sum(conv_idx), 0))
@@ -379,7 +834,7 @@ if(length(sfits) &gt; 0){
 }else{
   cat(&quot;All replications did not have convergent chains&quot;)
 }
-#&gt; All replications did not have convergent chains</code></pre>
+</code></pre>
 
 
 
