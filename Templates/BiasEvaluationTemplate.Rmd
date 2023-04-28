@@ -67,7 +67,7 @@ fit_model <- function(data,
                                          inverse = FALSE)
   
   ### model 1: intercept model
-  ThetaTrend <- LinearModelTrend(data, ~ 1)
+  ThetaTrend <- LinearModelTrend(data, ~ 1, non_centered = FALSE)
   ### reduce to just post mean, post median, credible interval, sampler errors
   tryCatch(
     {fit <- VARGrowth(data,
