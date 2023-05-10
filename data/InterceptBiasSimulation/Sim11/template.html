@@ -217,7 +217,7 @@ nchains = 4
 iter = 5000
 warmup = 0.5*iter
 seed = 123123
-ctrl &lt;- list(adapt_delta = 0.90)
+ctrl &lt;- list(adapt_delta = 0.95)
 
 fit_model &lt;- function(data, 
                       nchains, 
@@ -255,7 +255,7 @@ fit_model &lt;- function(data,
                                          inverse = FALSE)
   
   ### model 1: intercept model
-  ThetaTrend &lt;- LinearModelTrend(data, ~ 1)
+  ThetaTrend &lt;- LinearModelTrend(data, ~ 1, non_centered = TRUE)
   ### reduce to just post mean, post median, credible interval, sampler errors
   tryCatch(
     {fit &lt;- VARGrowth(data,
@@ -293,6 +293,511 @@ if(!file.exists(&quot;SimFits.RDS&quot;)){
 }else{
   fits &lt;- readRDS(&quot;SimFits.RDS&quot;)
 }
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 518 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 356 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 777 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 485 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 492 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 323 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Iteration 1, LME step: nlminb() did not converge (code = 1). PORT message:
+#&gt; false convergence (8)
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1034 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 858 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 745 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 618 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 460 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 473 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 815 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1135 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1075 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 767 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 954 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 251 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 565 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 421 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 519 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 279 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 505 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 533 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 486 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 568 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Warning in (function (model, data = sys.frame(sys.parent()), fixed, random, :
+#&gt; Iteration 2, LME step: nlminb() did not converge (code = 1). PORT message:
+#&gt; false convergence (8)
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 266 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 723 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 546 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 77 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 420 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 539 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 2 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 560 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 763 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 522 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 852 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 731 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 783 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 1469 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 395 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 233 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 163 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 821 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 387 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 578 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 325 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 756 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
+#&gt; Joining with `by = join_by(group)`
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+
+#&gt; Warning in rnorm(length(eps), 0, abs(parameter)/perturb_var): NAs produced
+#&gt; Warning: There were 558 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#&gt; Warning: Examine the pairs() plot to diagnose sampling problems
 
 num &lt;- length(fits)
 num - length(data)
