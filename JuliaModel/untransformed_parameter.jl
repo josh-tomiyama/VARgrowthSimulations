@@ -305,13 +305,8 @@ end
 ####################
 
 function perturb_normal!(vec, sd=0.5, proportion = 1)
-    prop = Normal(0, sd) # proposal distribution
-    if (proportion == 1)
-        vec += rand(prop, size(vec))
-    else
-        idx = Int.(sort(sample(1:length(vec), Int(floor(length(vec)*proportion)), replace=false)))
-        vec[idx] += rand(prop, length(idx))
-    end
+    prop = Normal(0, sd[1]) # proposal distribution
+    vec += rand(prop, size(vec))
     return(vec)
 end
 ## assumes correlation same among variables and common variance
@@ -476,18 +471,18 @@ function draw_beta_growth!(x0, σ=0.1, track_accept = true)
     f0 = fc_beta(x0[:beta_growth], x0[:X_growth],
                 x0[:growth],
                 x0[:latent_sd_growth],
-                0.85,
-                0.03, 
-                0.03,
+                0.9,
+                0.01, 
+                0.01,
                 0,
                 1)
 
     f1 = fc_beta(proposed, x0[:X_growth],
                 x0[:growth],
                         x0[:latent_sd_growth],
-                        0.85,
-                        0.03, 
-                        0.03,
+                        0.9,
+                        0.01, 
+                        0.01,
                         0,
                         1)
     # Symmetric 
@@ -719,6 +714,20 @@ function run_mcmc_chain(fname, x0, monitors, dat, warmup, run, thin=10, verbose 
     if verbose > 0
         print("Beginning warmup\n")
     end
+
+    perturb_sd = Dict(:asym => [0.18], #asym
+                 :offset => [0.0018], #offset
+                 :growth => [0.00007], #growth
+                 :beta_asym => 0.35, #beta_asym
+                 :beta_offset => 0.006,  #beta_offset
+                 :beta_growth => 0.005, #beta_growth
+                 :latent_sd_asym => 0.25, #latent_sd_asym
+                 :latent_sd_offset => 0.004, #latent_sd_offset
+                 :latent_sd_growth => 0.003, #latent_sd_growth
+                 :obs_sd => 5 #obs_sd
+    )
+
+
     ### best params for untransformed with these priors
     # perturb_sd = Dict(:asym => [0.22], #asym
     #              :offset => [0.0014], #offset
@@ -732,21 +741,21 @@ function run_mcmc_chain(fname, x0, monitors, dat, warmup, run, thin=10, verbose 
     #              :obs_sd => 5 #obs_sd
     # )
 
-    perturb_sd = Dict(:asym => [0.24], #asym
-                 :offset => [0.003], #offset
-                 :growth => [0.0004], #growth
-                 :beta_asym => 0.35, #beta_asym
-                 :beta_offset => 0.005,  #beta_offset
-                 :beta_growth => 0.005, #beta_growth
-                 :latent_sd_asym => 0.25, #latent_sd_asym
-                 :latent_sd_offset => 0.005, #latent_sd_offset
-                 :latent_sd_growth => 0.003, #latent_sd_growth
-                 :obs_sd => 20 #obs_sd
-    )
+    # perturb_sd = Dict(:asym => [0.24], #asym
+    #              :offset => [0.003], #offset
+    #              :growth => [0.0004], #growth
+    #              :beta_asym => 0.35, #beta_asym
+    #              :beta_offset => 0.005,  #beta_offset
+    #              :beta_growth => 0.005, #beta_growth
+    #              :latent_sd_asym => 0.25, #latent_sd_asym
+    #              :latent_sd_offset => 0.005, #latent_sd_offset
+    #              :latent_sd_growth => 0.003, #latent_sd_growth
+    #              :obs_sd => 20 #obs_sd
+    # )
     
-    perturb_corr = Dict(:asym => 0.1, #asym
-                 :offset => 0.15, #offset
-                 :growth => 0.1, #growth
+    perturb_corr = Dict(:asym => 0.0, #asym
+                 :offset => 0.0, #offset
+                 :growth => 0.0, #growth
     )
 
     for i in 1:warmup
@@ -787,19 +796,19 @@ function run_mcmc_chain(fname, x0, monitors, dat, warmup, run, thin=10, verbose 
         if i % thin == 0
             write_csv_line(x0,symbols=monitors, file=outfile, newfile=false)
         end
-        # draw_asym!(x0, dat, perturb_sd[:asym], perturb_corr[:asym], true)
+        draw_asym!(x0, dat, perturb_sd[:asym], perturb_corr[:asym], true)
         draw_offset!(x0, dat, perturb_sd[:offset], perturb_corr[:offset], true)
-        # draw_growth!(x0, dat, perturb_sd[:growth], perturb_corr[:growth], true)
+        draw_growth!(x0, dat, perturb_sd[:growth], perturb_corr[:growth], true)
 
-        # draw_beta_asym!(x0, perturb_sd[:beta_asym], true)
-        # draw_beta_offset!(x0, perturb_sd[:beta_offset], true)
-        # draw_beta_growth!(x0, perturb_sd[:beta_growth], true)
+        draw_beta_asym!(x0, perturb_sd[:beta_asym], true)
+        draw_beta_offset!(x0, perturb_sd[:beta_offset], true)
+        draw_beta_growth!(x0, perturb_sd[:beta_growth], true)
 
-        # draw_latent_sd_asym!(x0, perturb_sd[:latent_sd_asym], true)
-        # draw_latent_sd_offset!(x0, perturb_sd[:latent_sd_offset], true)
-        # draw_latent_sd_growth!(x0, perturb_sd[:latent_sd_growth], true)
+        draw_latent_sd_asym!(x0, perturb_sd[:latent_sd_asym], true)
+        draw_latent_sd_offset!(x0, perturb_sd[:latent_sd_offset], true)
+        draw_latent_sd_growth!(x0, perturb_sd[:latent_sd_growth], true)
 
-        # draw_obs_sd!(x0, dat, perturb_sd[:obs_sd], true)
+        draw_obs_sd!(x0, dat, perturb_sd[:obs_sd], true)
     end
 
     ## output acceptance ratios

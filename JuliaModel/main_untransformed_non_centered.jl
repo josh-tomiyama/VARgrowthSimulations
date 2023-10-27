@@ -5,6 +5,8 @@ include("untransformed_parameter_non_centered.jl")
 # include("untransformed_parameter.jl")
 using CSV
 using Random
+using Plots
+using Optim
 ############################
 ### Setup and Simulation ###
 ############################
@@ -70,9 +72,9 @@ inits2 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
 :beta_asym => [rand(Normal(a, 0.5), 1)[1] for a in [beta_asym ;;]],
 :beta_offset => [rand(Normal(a, 0.01), 1)[1] for a in [beta_offset ;;]],
 :beta_growth =>  [rand(Normal(a, 0.01), 1)[1] for a in [beta_growth ;;]],
-:latent_sd_asym => [rand(truncated(Normal(a, 0.5), lower = 0), 1)[1] for a in [latent_sd_asym]],
-:latent_sd_offset => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_offset]],
-:latent_sd_growth =>  [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_growth]],
+:latent_sd_asym => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_asym]],
+:latent_sd_offset => [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_offset]],
+:latent_sd_growth =>  [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_growth]],
 :obs_sd =>  [rand(truncated(Normal(a, 10), lower = 0), 1)[1]  for a in [obs_sd]])
 
 inits3 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
@@ -81,9 +83,9 @@ inits3 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
 :beta_asym => [rand(Normal(a, 0.5), 1)[1] for a in [beta_asym ;;]],
 :beta_offset => [rand(Normal(a, 0.01), 1)[1] for a in [beta_offset ;;]],
 :beta_growth =>  [rand(Normal(a, 0.01), 1)[1] for a in [beta_growth ;;]],
-:latent_sd_asym => [rand(truncated(Normal(a, 0.5), lower = 0), 1)[1] for a in [latent_sd_asym]],
-:latent_sd_offset => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_offset]],
-:latent_sd_growth =>  [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_growth]],
+:latent_sd_asym => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_asym]],
+:latent_sd_offset => [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_offset]],
+:latent_sd_growth =>  [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_growth]],
 :obs_sd =>  [rand(truncated(Normal(a, 10), lower = 0), 1)[1]  for a in [obs_sd]])
 
 inits4 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
@@ -92,9 +94,9 @@ inits4 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
 :beta_asym => [rand(Normal(a, 0.5), 1)[1] for a in [beta_asym ;;]],
 :beta_offset => [rand(Normal(a, 0.01), 1)[1] for a in [beta_offset ;;]],
 :beta_growth =>  [rand(Normal(a, 0.01), 1)[1] for a in [beta_growth ;;]],
-:latent_sd_asym => [rand(truncated(Normal(a, 0.5), lower = 0), 1)[1] for a in [latent_sd_asym]],
-:latent_sd_offset => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_offset]],
-:latent_sd_growth =>  [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_growth]],
+:latent_sd_asym => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_asym]],
+:latent_sd_offset => [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_offset]],
+:latent_sd_growth =>  [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_growth]],
 :obs_sd =>  [rand(truncated(Normal(a, 10), lower = 0), 1)[1]  for a in [obs_sd]])
 
 init_truth = Dict(:asym => asym,
@@ -123,25 +125,146 @@ state2 = generate_init_state(copy(df), inits3)
 state3 = generate_init_state(copy(df), inits4)
 # function run_mcmc_chain(fname, x0, monitors, dat, warmup, run, thin=10, verbose = 1)
 ## latent_sd_offset not looking so good
-@time run_mcmc_chain(data_dir * "/reparam.csv", state0, monitors, df, 1, 10000, 20)
-true_file_name = data_dir * "/truevals_reparam.csv"
-write_csv_line(init_truth, symbols=[x for x in keys(init_truth)], file= true_file_name, newfile=true)
-truefile = open(true_file_name, "a")
-write_csv_line(init_truth, symbols=[x for x in keys(init_truth)], file=truefile, newfile=false)
-close(truefile)
+perturb_sd = Dict(:asym => 0.3, #asym
+:offset => 0.18, #offset
+:growth => 0.007, #growth
+:beta_asym => 6.5, #beta_asym
+:beta_offset => 0.0035,  #beta_offset
+:beta_growth => 0.00013, #beta_growth
+:latent_sd_asym => 0.0025, #latent_sd_asym
+:latent_sd_offset => 0.000025, #latent_sd_offset
+:latent_sd_growth => 0.00013, #latent_sd_growth
+:obs_sd => 5 #obs_sd
+)
 
-using Base.Threads
-# define number of threads in settings or set computer environment variable
-if nthreads() < 4
-    error("Set number of threads before running parallel")
+# function run_mcmc_chain(fname, x0, monitors, dat, priors, perturb_sd, warmup, run, thin=10, verbose = 1)
+
+@time run_mcmc_chain(data_dir * "/reparam.csv", state0, monitors, df, priors, perturb_sd, 1,  10000, 20)
+
+
+###########################################
+### log likelihoods at true values ########
+###########################################
+
+log_posterior(df, state0[:asym], state0[:offset], 
+             state0[:growth], state0[:obs_sd], state0[:beta_asym], state0[:X_asym], state0[:latent_sd_asym], 
+             state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], state0[:beta_growth], 
+             state0[:X_growth], state0[:latent_sd_growth],
+             priors)
+
+log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+             state0[:beta_asym], state0[:X_asym], state0[:latent_sd_asym], 
+             state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+             state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors)
+
+
+log_lik_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+             state0[:beta_asym], state0[:X_asym], state0[:latent_sd_asym], 
+             state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+             state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth])
+
+priors2 = Dict(:asym => Uniform(18000, 22000), # unused
+            :offset => Uniform(1, 3), # unused
+            :growth => Uniform(0.7, 0.9), # unused
+            :asym_raw => Normal(0, 1),
+            :offset_raw => Normal(0, 1),
+            :growth_raw => Normal(0, 1),
+            :beta_asym => Normal(20000, 10),
+            :beta_offset => Normal(2, 0.2),
+            :beta_growth => Normal(0.9, 0.01),
+            :latent_sd_asym => InverseGamma(1, 1),
+            :latent_sd_offset => InverseGamma(1, 1), 
+            :latent_sd_growth => InverseGamma(1, 1),
+            :obs_sd => InverseGamma(1, 1))
+
+# x = [0.001:0.001:2;]
+x = [1.9, 1.99]
+y = map(param -> log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+state0[:beta_asym], state0[:X_asym], param, 
+state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors), x)
+plot(x, -y)
+plot!([1], seriestype = "vline")
+
+x = [18000:10:22000;]
+y = map(param -> log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param, state0[:X_asym], state0[:latent_sd_asym], 
+state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors), x)
+plot(x, -y)
+plot!([20000], seriestype = "vline")
+
+####################
+### optmization ###
+###################
+
+### for minimization
+function log_posterior_raw2(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
+    beta_asym, X_asym, latent_sd_asym, 
+    beta_offset, X_offset, latent_sd_offset, 
+    beta_growth, X_growth, latent_sd_growth, priors)
+
+    -log_posterior_raw2(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
+    beta_asym, X_asym, latent_sd_asym, 
+    beta_offset, X_offset, latent_sd_offset, 
+    beta_growth, X_growth, latent_sd_growth, priors)
 end
 
-function write_accepts(state, accept_file_name, accept_keys)
-    write_csv_line(state, symbols=accept_keys, file= accept_file_name, newfile=true)
-    accept_file = open(accept_file_name, "a")
-    write_csv_line(state, symbols=accept_keys, file=accept_file, newfile=false)
-    close(accept_file)
-end
+nvar = 2
+init1 = [18000, 0.5]
+func = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param[1], state0[:X_asym], state0[:latent_sd_asym], 
+param[2], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
+           [18000, 0.5]; autodiff=:forward);
+
+opt = optimize(func, [18000, 0.5])
+parameters = Optim.minimizer(opt)
+
+init2 = [19000, 0.5]
+func2 = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param[1], state0[:X_asym], param[2], 
+state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
+    init2; autodiff=:forward);
+
+opt2 = optimize(func2, init2)
+parameters2 = Optim.minimizer(opt2)
+
+
+init2 = [19000, 0.5]
+func2 = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param[1], state0[:X_asym], param[2], 
+state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
+    init2; autodiff=:forward);
+
+opt2 = optimize(func2, init2)
+parameters2 = Optim.minimizer(opt2)
+
+
+##################################
+######## Parallel MCMC ###########
+##################################
+
+# true_file_name = data_dir * "/truevals_reparam.csv"
+# write_csv_line(init_truth, symbols=[x for x in keys(init_truth)], file= true_file_name, newfile=true)
+# truefile = open(true_file_name, "a")
+# write_csv_line(init_truth, symbols=[x for x in keys(init_truth)], file=truefile, newfile=false)
+# close(truefile)
+
+# using Base.Threads
+# # define number of threads in settings or set computer environment variable
+# if nthreads() < 4
+#     error("Set number of threads before running parallel")
+# end
+
+# function write_accepts(state, accept_file_name, accept_keys)
+#     write_csv_line(state, symbols=accept_keys, file= accept_file_name, newfile=true)
+#     accept_file = open(accept_file_name, "a")
+#     write_csv_line(state, symbols=accept_keys, file=accept_file, newfile=false)
+#     close(accept_file)
+# end
 
 # accept_keys = [:accept_raw_asym ,
 # :accept_raw_offset ,
@@ -160,16 +283,16 @@ end
 # @time begin
 # @threads for chain in 1:4
 #     if chain == 1
-#         run_mcmc_chain(data_dir * "/reparam1.csv", state1, monitors, df, warmup, run, 20)
+#         run_mcmc_chain(data_dir * "/reparam1.csv", state1, monitors, df, perturb_sd, warmup, run, 20)
 #         write_accepts(state1, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
 #     elseif chain == 2
-#         run_mcmc_chain(data_dir * "/reparam2.csv", state2, monitors, df, warmup, run, 20)
+#         run_mcmc_chain(data_dir * "/reparam2.csv", state2, monitors, df, perturb_sd, warmup, run, 20)
 #         write_accepts(state2, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
 #     elseif chain == 3
-#         run_mcmc_chain(data_dir * "/reparam3.csv", state3, monitors, df, warmup, run, 20)
+#         run_mcmc_chain(data_dir * "/reparam3.csv", state3, monitors, df, perturb_sd, warmup, run, 20)
 #         write_accepts(state3, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
 #     else 
-#         run_mcmc_chain(data_dir * "/reparam0.csv", state0, monitors, df, warmup, run, 20)
+#         run_mcmc_chain(data_dir * "/reparam0.csv", state0, monitors, df, perturb_sd, warmup, run, 20)
 #         write_accepts(state0, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
 #     end
 # end

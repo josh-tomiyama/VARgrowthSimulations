@@ -30,7 +30,7 @@ latent_sd_asym = 1
 latent_sd_offset = 0.01
 latent_sd_growth = 0.01
 
-obs_sd = 500
+obs_sd = 100
 
 # asym = [rand(d, 1)[1] for d in truncated.(Normal.(X*beta_asym, latent_sd_asym), lower = 0, upper = Inf)] 
 # offset = [rand(d, 1)[1] for d in truncated.(Normal.(X*beta_offset, latent_sd_offset), lower = 0, upper = Inf)] 
