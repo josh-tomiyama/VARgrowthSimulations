@@ -142,91 +142,101 @@ perturb_sd = Dict(:asym => 0.3, #asym
 @time run_mcmc_chain(data_dir * "/reparam.csv", state0, monitors, df, priors, perturb_sd, 1,  10000, 20)
 
 
-##################################
-######## Parallel MCMC ###########
-##################################
+###########################################
+### log likelihoods at true values ########
+###########################################
 
-# true_file_name = data_dir * "/truevals_reparam.csv"
-# write_csv_line(init_truth, symbols=[x for x in keys(init_truth)], file= true_file_name, newfile=true)
-# truefile = open(true_file_name, "a")
-# write_csv_line(init_truth, symbols=[x for x in keys(init_truth)], file=truefile, newfile=false)
-# close(truefile)
+log_posterior(df, state0[:asym], state0[:offset], 
+             state0[:growth], state0[:obs_sd], state0[:beta_asym], state0[:X_asym], state0[:latent_sd_asym], 
+             state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], state0[:beta_growth], 
+             state0[:X_growth], state0[:latent_sd_growth],
+             priors)
 
-# using Base.Threads
-# # define number of threads in settings or set computer environment variable
-# if nthreads() < 4
-#     error("Set number of threads before running parallel")
-# end
-
-# function write_accepts(state, accept_file_name, accept_keys)
-#     write_csv_line(state, symbols=accept_keys, file= accept_file_name, newfile=true)
-#     accept_file = open(accept_file_name, "a")
-#     write_csv_line(state, symbols=accept_keys, file=accept_file, newfile=false)
-#     close(accept_file)
-# end
-
-# accept_keys = [:accept_raw_asym ,
-# :accept_raw_offset ,
-# :accept_raw_growth ,
-# :accept_beta_asym ,
-# :accept_beta_offset ,
-# :accept_beta_growth ,
-# :accept_latent_sd_asym ,
-# :accept_latent_sd_offset ,
-# :accept_latent_sd_growth ,
-# :accept_obs_sd ]
-
-# warmup = 1000
-# run = 100000
-
-# @time begin
-# @threads for chain in 1:4
-#     if chain == 1
-#         run_mcmc_chain(data_dir * "/reparam1.csv", state1, monitors, df, perturb_sd, warmup, run, 20)
-#         write_accepts(state1, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
-#     elseif chain == 2
-#         run_mcmc_chain(data_dir * "/reparam2.csv", state2, monitors, df, perturb_sd, warmup, run, 20)
-#         write_accepts(state2, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
-#     elseif chain == 3
-#         run_mcmc_chain(data_dir * "/reparam3.csv", state3, monitors, df, perturb_sd, warmup, run, 20)
-#         write_accepts(state3, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
-#     else 
-#         run_mcmc_chain(data_dir * "/reparam0.csv", state0, monitors, df, perturb_sd, warmup, run, 20)
-#         write_accepts(state0, data_dir * "/accept_reparam" * string(chain) * ".csv", accept_keys)
-#     end
-# end
-# end
+log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+             state0[:beta_asym], state0[:X_asym], state0[:latent_sd_asym], 
+             state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+             state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors)
 
 
+log_lik_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+             state0[:beta_asym], state0[:X_asym], state0[:latent_sd_asym], 
+             state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+             state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth])
 
-# [state0[s] = [state0[s]] for s in accept_keys]
-# [state1[s] = [state1[s]] for s in accept_keys]
-# [state2[s] = [state2[s]] for s in accept_keys]
-# [state3[s] = [state3[s]] for s in accept_keys]
+priors2 = Dict(:asym => Uniform(18000, 22000), # unused
+            :offset => Uniform(1, 3), # unused
+            :growth => Uniform(0.7, 0.9), # unused
+            :asym_raw => Normal(0, 1),
+            :offset_raw => Normal(0, 1),
+            :growth_raw => Normal(0, 1),
+            :beta_asym => Normal(20000, 10),
+            :beta_offset => Normal(2, 0.2),
+            :beta_growth => Normal(0.9, 0.01),
+            :latent_sd_asym => InverseGamma(1, 1),
+            :latent_sd_offset => InverseGamma(1, 1), 
+            :latent_sd_growth => InverseGamma(1, 1),
+            :obs_sd => InverseGamma(1, 1))
 
-# function write_accepts(state, accept_file_name, accept_keys)
-#     write_csv_line(state, symbols=accept_keys, file= accept_file_name, newfile=true)
-#     accept_file = open(accept_file_name, "a")
-#     write_csv_line(state, symbols=accept_keys, file=accept_file, newfile=false)
-#     close(accept_file)
-# end
-# accept_file_name = data_dir * "/accept_reparam0.csv"
+x = [0.001:0.001:2;]
+y = map(param -> log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], state0[:obs_sd], 
+beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd-asym = param, 
+beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
+beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], priors = priors priors), x)
+plot(x, -y)
+plot!([1], seriestype = "vline")
+
+x = [18000:10:22000;]
+y = map(param -> log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param, state0[:X_asym], state0[:latent_sd_asym], 
+state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors), x)
+plot(x, -y)
+plot!([20000], seriestype = "vline")
+
+####################
+### optmization ###
+###################
+
+### for minimization
+function log_posterior_raw2(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
+    beta_asym, X_asym, latent_sd_asym, 
+    beta_offset, X_offset, latent_sd_offset, 
+    beta_growth, X_growth, latent_sd_growth, priors)
+
+    -log_posterior_raw2(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
+    beta_asym, X_asym, latent_sd_asym, 
+    beta_offset, X_offset, latent_sd_offset, 
+    beta_growth, X_growth, latent_sd_growth, priors)
+end
+
+nvar = 2
+init1 = [18000, 0.5]
+func = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param[1], state0[:X_asym], state0[:latent_sd_asym], 
+param[2], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
+           [18000, 0.5]; autodiff=:forward);
+
+opt = optimize(func, [18000, 0.5])
+parameters = Optim.minimizer(opt)
+
+init2 = [19000, 0.5]
+func2 = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param[1], state0[:X_asym], param[2], 
+state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
+    init2; autodiff=:forward);
+
+opt2 = optimize(func2, init2)
+parameters2 = Optim.minimizer(opt2)
 
 
-# accept_file_name = data_dir * "/accept_reparam1.csv"
-# write_csv_line(state1, symbols=accept_keys, file= accept_file_name, newfile=true)
-# accept_file = open(accept_file_name, "a")
-# write_csv_line(state1, symbols=accept_keys, file=accept_file, newfile=false)
-# close(accept_file)
+init2 = [19000, 0.5]
+func2 = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+param[1], state0[:X_asym], param[2], 
+state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
+state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
+    init2; autodiff=:forward);
 
-# accept_file_name = data_dir * "/accept_reparam2.csv"
-# write_csv_line(state2, symbols=accept_keys, file= accept_file_name, newfile=true)
-# accept_file = open(accept_file_name, "a")
-# write_csv_line(state2, symbols=accept_keys, file=accept_file, newfile=false)
-# close(accept_file)
-
-# accept_file_name = data_dir * "/accept_reparam3.csv"
-# write_csv_line(state3, symbols=accept_keys, file= accept_file_name, newfile=true)
-# accept_file = open(accept_file_name, "a")
-# write_csv_line(state3, symbols=accept_keys, file=accept_file, newfile=false)
-# close(accept_file)
+opt2 = optimize(func2, init2)
+parameters2 = Optim.minimizer(opt2)

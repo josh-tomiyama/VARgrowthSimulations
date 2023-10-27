@@ -249,10 +249,10 @@ return(out)
 
 end
 
-function log_posterior_raw(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
-                            beta_asym, X_asym, latent_sd_asym, 
-                            beta_offset, X_offset, latent_sd_offset, 
-                            beta_growth, X_growth, latent_sd_growth, priors)
+function log_posterior_raw(dat; raw_asym; raw_offset; raw_growth; obs_sd; 
+                            beta_asym; X_asym; latent_sd_asym; 
+                            beta_offset; X_offset; latent_sd_offset; 
+                            beta_growth; X_growth; latent_sd_growth; priors)
     out = 0.0
 
     if any(latent_sd_asym .<= 0)
