@@ -48,9 +48,6 @@ end
 ######################
 ## Prior Definition ##
 ######################
-### TODO create a Dict of priors to be passed and called in fc functions
-### aborted for now
-### should be a Dict that maps priors to param names
 
 priors = Dict(:asym => Uniform(18000, 22000), # unused
             :offset => Uniform(1, 3), # unused
@@ -61,12 +58,12 @@ priors = Dict(:asym => Uniform(18000, 22000), # unused
             :beta_asym => Normal(20000, 10),
             :beta_offset => Normal(2, 0.2),
             :beta_growth => Normal(0.9, 0.01),
-            # :latent_sd_asym => truncated(Normal(0, 0.1)),
-            # :latent_sd_offset => truncated(Normal(0, 0.1)), 
-            # :latent_sd_growth => truncated(Normal(0,0.1)),
-            :latent_sd_asym => Uniform(0, 10),
-            :latent_sd_offset => Uniform(0, 10), 
-            :latent_sd_growth => Uniform(0, 10),
+            :latent_sd_asym => truncated(Normal(0, 5), lower = 0),
+            :latent_sd_offset => truncated(Normal(0, 0.1), lower = 0), 
+            :latent_sd_growth => truncated(Normal(0, 0.1), lower = 0),
+            # :latent_sd_asym => Uniform(0, 10),
+            # :latent_sd_offset => Uniform(0, 10), 
+            # :latent_sd_growth => Uniform(0, 10),
             :obs_sd => InverseGamma(1, 1))
 
 
@@ -147,11 +144,23 @@ end
 
 
 
-function log_posterior(dat, asym, offset, growth, obs_sd, 
+function log_posterior(;dat, asym, offset, growth, obs_sd, 
                         beta_asym, X_asym, latent_sd_asym,
                         beta_offset, X_offset, latent_sd_offset,
                         beta_growth, X_growth, latent_sd_growth, priors)
     out = 0.0
+
+    if any(latent_sd_asym .<= 0)
+        return(-Inf)
+        end
+        
+    if any(latent_sd_offset .<= 0)
+    return(-Inf)
+    end
+    
+    if any(latent_sd_growth .<= 0)
+    return(-Inf)
+    end
     
     
     ## observed process likelihood
@@ -221,9 +230,9 @@ offset =  Array{Float64}(undef, size(raw_offset))
 growth =  Array{Float64}(undef, size(raw_growth))
 
 
-asym = generate_gparam(raw_asym, X_asym, beta_asym, latent_sd_asym)
-offset = generate_gparam(raw_offset, X_offset, beta_offset, latent_sd_offset)
-growth = generate_gparam(raw_growth, X_growth, beta_growth, latent_sd_growth)
+asym = generate_gparam(gparam_raw = raw_asym, X = X_asym, beta = beta_asym, latent_sd = latent_sd_asym)
+offset = generate_gparam(gparam_raw = raw_offset, X = X_offset, beta = beta_offset, latent_sd = latent_sd_offset)
+growth = generate_gparam(gparam_raw = raw_growth, X = X_growth, beta = beta_growth, latent_sd = latent_sd_growth)
 ## observed process likelihood
 out += gompertz_likelihood(dat, asym, offset, growth, obs_sd)  
 # mu = @. (asym[dat.group] * exp( -offset[dat.group] * exp( log( growth[dat.group])  * dat.time) ) )
@@ -249,10 +258,10 @@ return(out)
 
 end
 
-function log_posterior_raw(dat; raw_asym; raw_offset; raw_growth; obs_sd; 
-                            beta_asym; X_asym; latent_sd_asym; 
-                            beta_offset; X_offset; latent_sd_offset; 
-                            beta_growth; X_growth; latent_sd_growth; priors)
+function log_posterior_raw(;dat, raw_asym, raw_offset, raw_growth, obs_sd, 
+                            beta_asym, X_asym, latent_sd_asym, 
+                            beta_offset, X_offset, latent_sd_offset, 
+                            beta_growth, X_growth, latent_sd_growth, priors)
     out = 0.0
 
     if any(latent_sd_asym .<= 0)
@@ -272,9 +281,9 @@ function log_posterior_raw(dat; raw_asym; raw_offset; raw_growth; obs_sd;
     growth =  Array{Float64}(undef, size(raw_growth))
 
     # function generate_gparam(gparam_raw, X, beta, latent_sd)
-    asym = generate_gparam(raw_asym, X_asym, beta_asym, latent_sd_asym)
-    offset = generate_gparam(raw_offset, X_offset, beta_offset, latent_sd_offset)
-    growth = generate_gparam(raw_growth, X_growth, beta_growth, latent_sd_growth)
+    asym = generate_gparam(gparam_raw = raw_asym, X = X_asym, beta = beta_asym, latent_sd = latent_sd_asym)
+    offset = generate_gparam(gparam_raw = raw_offset, X = X_offset, beta = beta_offset, latent_sd = latent_sd_offset)
+    growth = generate_gparam(gparam_raw = raw_growth, X = X_growth, beta = beta_growth, latent_sd = latent_sd_growth)
     
     ## observed process likelihood
     out += gompertz_likelihood(dat, asym, offset, growth, obs_sd)  
@@ -284,19 +293,23 @@ function log_posterior_raw(dat; raw_asym; raw_offset; raw_growth; obs_sd;
     # out += sum(logpdf.(d, dat.outcome))
 
     ## latent process likelihood
-    eta_asym = X_asym*beta_asym
-    d_asym = Normal.(eta_asym, latent_sd_asym)
-    out += sum(logpdf.(d_asym, asym))
+    # eta_asym = X_asym*beta_asym
+    # d_asym = Normal.(eta_asym, latent_sd_asym)
+    # out += sum(logpdf.(d_asym, asym))
 
 
-    eta_offset = X_offset*beta_offset
-    d_offset = Normal.(eta_offset, latent_sd_offset)
-    out += sum(logpdf.(d_offset, offset))
+    # eta_offset = X_offset*beta_offset
+    # d_offset = Normal.(eta_offset, latent_sd_offset)
+    # out += sum(logpdf.(d_offset, offset))
 
 
-    eta_growth = X_growth*beta_growth
-    d_growth = Normal.(eta_growth, latent_sd_growth)
-    out += sum(logpdf.(d_growth, growth))
+    # eta_growth = X_growth*beta_growth
+    # d_growth = Normal.(eta_growth, latent_sd_growth)
+    # out += sum(logpdf.(d_growth, growth))
+    d = Normal(0,1)
+    out += sum(logpdf.(d, raw_asym))
+    out += sum(logpdf.(d, raw_offset))
+    out += sum(logpdf.(d, raw_growth))
 
     ## priors
 
@@ -666,7 +679,7 @@ function perturb_normal!(vec, sd=0.5)
 end
 
 
-function generate_gparam(gparam_raw, X, beta, latent_sd)
+function generate_gparam(;gparam_raw, X, beta, latent_sd)
     # currently don't know how to use lwr_lim and upr_lim in simulation
     # gparam ~ N(eta, latent_sd)
     eta = X*beta
@@ -702,27 +715,31 @@ end
 #     end
 # end
 
-function draw_raw_asym!(x0, dat, priors, σ=0.1, track_accept = true)
+function draw_raw_asym!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     ## generate_gparam(X, beta, latent_sd, lwr, upr, lwr_lim = -Inf, upr_lim = Inf)
     ## fc_gparam_raw(gparam_raw, asym, offset, growth, obs_sd, X, beta, latent_sd, dat, lwr_lim, upr_lim)
     prop_gparam = Array{Float64}(undef, size(x0[:asym]))
 
     proposed = perturb_normal!(copy(x0[:raw_asym]), σ)
-    prop_gparam = generate_gparam(proposed, x0[:X_asym], x0[:beta_asym], x0[:latent_sd_asym])
+    prop_gparam = generate_gparam(gparam_raw = proposed, X =x0[:X_asym], beta = x0[:beta_asym], latent_sd = x0[:latent_sd_asym])
+    # generate_gparam(proposed, x0[:X_asym], x0[:beta_asym], x0[:latent_sd_asym])
 
     # log_posterior_raw(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, proposed, x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    
+    f1 = log_posterior_raw(dat = dat, raw_asym = proposed, raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
 
     # f0 = fc_gparam_raw(x0[:raw_asym], x0[:asym], x0[:offset], x0[:growth], x0[:obs_sd], 
     #                     x0[:X_asym], x0[:beta_asym], x0[:latent_sd_asym], 
@@ -742,13 +759,16 @@ function draw_raw_asym!(x0, dat, priors, σ=0.1, track_accept = true)
     end
 end
 
-function draw_raw_offset!(x0, dat, priors, σ=0.1, track_accept = true)
+function draw_raw_offset!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept = true)
     ## generate_gparam(X, beta, latent_sd, lwr, upr, lwr_lim = -Inf, upr_lim = Inf)
     ## fc_gparam_raw(gparam_raw, asym, offset, growth, obs_sd, X, beta, latent_sd, dat, lwr_lim, upr_lim)
     prop_gparam = Array{Float64}(undef, size(x0[:offset]))
 
     proposed = perturb_normal!(copy(x0[:raw_offset]), σ)
-    prop_gparam = generate_gparam(proposed, x0[:X_offset], x0[:beta_offset], x0[:latent_sd_offset])
+    prop_gparam = generate_gparam(gparam_raw = proposed, X =x0[:X_offset], beta = x0[:beta_offset], latent_sd = x0[:latent_sd_offset])
+    # prop_gparam = generate_gparam(proposed, x0[:X_offset], x0[:beta_offset], x0[:latent_sd_offset])
+
+
     
     # f0 = fc_gparam_raw(x0[:raw_offset], x0[:asym], x0[:offset], x0[:growth], x0[:obs_sd], 
     # x0[:X_offset], x0[:beta_offset], x0[:latent_sd_offset],
@@ -761,18 +781,22 @@ function draw_raw_offset!(x0, dat, priors, σ=0.1, track_accept = true)
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], proposed, x0[:raw_growth], x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = proposed, raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
 
     # Symmetric 
-    a = (f1-f0)              
+    a = (f1-f0) 
+    # print(a) 
+    # print("\n")            
     if (log(rand(Uniform(0,1),1)[1]) < a )
         x0[:raw_offset] = proposed
         x0[:offset] = prop_gparam
@@ -783,14 +807,14 @@ function draw_raw_offset!(x0, dat, priors, σ=0.1, track_accept = true)
 end
 
 
-function draw_raw_growth!(x0, dat, priors, σ=0.1, track_accept = true)
+function draw_raw_growth!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     ## generate_gparam(X, beta, latent_sd, lwr, upr, lwr_lim = -Inf, upr_lim = Inf)
     ## fc_gparam_raw(gparam_raw, asym, offset, growth, obs_sd, X, beta, latent_sd, dat, lwr_lim, upr_lim)
     # generate_gparam_raw(beta, X, gparam, latent_sd)
     prop_gparam = Array{Float64}(undef, size(x0[:growth]))
 
     proposed = perturb_normal!(copy(x0[:raw_growth]), σ)
-    prop_gparam = generate_gparam(proposed, x0[:X_growth], x0[:beta_growth], x0[:latent_sd_growth])
+    prop_gparam = generate_gparam(gparam_raw = proposed, X =x0[:X_growth], beta = x0[:beta_growth], latent_sd = x0[:latent_sd_growth])
 
     # f0 = fc_gparam_raw(x0[:raw_growth], x0[:asym], x0[:offset], x0[:growth], x0[:obs_sd], 
     #             x0[:X_growth], x0[:beta_growth], x0[:latent_sd_growth],
@@ -803,15 +827,18 @@ function draw_raw_growth!(x0, dat, priors, σ=0.1, track_accept = true)
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], proposed, x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = proposed, 
+                        obs_sd = x0[:obs_sd], 
+                        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
     # Symmetric 
     a = (f1-f0)              
     if (log(rand(Uniform(0,1),1)[1]) < a )
@@ -825,26 +852,29 @@ end
 
 ### Drawing 
 ### Be sure to change priors appropriately
-function draw_beta_asym!(x0, dat, priors, σ=0.1, track_accept = true)
+function draw_beta_asym!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     prop_gparam = Array{Float64}(undef, size(x0[:growth]))
 
     proposed = perturb_normal!(copy(x0[:beta_asym]), σ)
     ## need to update the gparam based on current proposal
-    prop_gparam = generate_gparam(x0[:raw_asym], x0[:X_asym], proposed, x0[:latent_sd_asym])
+    prop_gparam = generate_gparam(gparam_raw = x0[:raw_asym], X = x0[:X_asym], beta = proposed, latent_sd = x0[:latent_sd_asym])
+    
     # fc_beta(beta, dat, asym, offset, growth, obs_sd, prior_mean = 0, prior_intercept_sd = 1, prior_sd = 1)
     # log_posterior_raw(dat, asym_raw, offset_raw, growth_raw, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                        proposed, x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                        beta_asym = proposed, X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+                        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+                        priors =priors)
 
     # f0 = fc_beta(x0[:beta_asym], 
     #             dat, 
@@ -872,23 +902,25 @@ function draw_beta_asym!(x0, dat, priors, σ=0.1, track_accept = true)
     end
 end
 
-function draw_beta_offset!(x0, dat, priors, σ=0.1, track_accept = true)
+function draw_beta_offset!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     proposed = perturb_normal!(copy(x0[:beta_offset]), σ)
     ## need to update the gparam based on current proposal
-    prop_gparam = generate_gparam(x0[:raw_offset], x0[:X_offset], proposed, x0[:latent_sd_offset])
+    prop_gparam = generate_gparam(gparam_raw = x0[:raw_offset], X = x0[:X_offset], beta = proposed, latent_sd = x0[:latent_sd_offset])
     # log_posterior_raw(dat, asym_raw, offset_raw, growth_raw, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        proposed, x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = proposed, X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
 
     # Symmetric 
     a = (f1-f0)              
@@ -903,23 +935,25 @@ end
 ## use optim.jl
 ## 
 
-function draw_beta_growth!(x0, dat, priors, σ=0.1, track_accept = true)
+function draw_beta_growth!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     proposed = perturb_normal!(copy(x0[:beta_growth]), σ)
-    prop_gparam = generate_gparam(x0[:raw_growth], x0[:X_growth], proposed, x0[:latent_sd_growth])
+    prop_gparam = generate_gparam(gparam_raw = x0[:raw_growth], X =  x0[:X_growth],  beta = proposed, latent_sd = x0[:latent_sd_growth])
     # fc_beta(beta, dat, asym, offset, growth, obs_sd, prior_mean = 0, prior_intercept_sd = 1, prior_sd = 1)
     # log_posterior_raw(dat, asym_raw, offset_raw, growth_raw, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        proposed, x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = proposed, X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
     
     # Symmetric 
     a = (f1-f0)              
@@ -935,22 +969,24 @@ end
 
 
 ### latent standard deviations
-function draw_latent_sd_asym!(x0, dat, priors, σ = 0.01, track_accept = true)
+function draw_latent_sd_asym!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     prop = perturb_normal!(copy(x0[:latent_sd_asym]), σ)
-    prop_gparam = generate_gparam(x0[:raw_asym], x0[:X_asym], x0[:beta_asym], prop)
+    prop_gparam = generate_gparam(gparam_raw = x0[:raw_asym], X =  x0[:X_asym], beta =  x0[:beta_asym], latent_sd = prop)
     # log_posterior_raw(dat, asym_raw, offset_raw, growth_raw, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], prop, 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = prop, 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
     a = (f1-f0)              
     if (log(rand(Uniform(0,1),1)[1]) < a )
         x0[:latent_sd_asym] = prop
@@ -961,22 +997,24 @@ function draw_latent_sd_asym!(x0, dat, priors, σ = 0.01, track_accept = true)
     end
 end
 
-function draw_latent_sd_offset!(x0, dat, priors, σ = 0.01, track_accept = true)
+function draw_latent_sd_offset!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     prop = perturb_normal!(copy(x0[:latent_sd_offset]), σ)
-    prop_gparam = generate_gparam(x0[:raw_offset], x0[:X_offset], x0[:beta_offset], prop)
+    prop_gparam = generate_gparam(gparam_raw = x0[:raw_offset], X = x0[:X_offset], beta = x0[:beta_offset], latent_sd = prop)
     # log_posterior_raw(dat, asym_raw, offset_raw, growth_raw, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], prop, 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = prop, 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+        beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+        beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+        beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+        priors =priors)
     a = (f1-f0)              
     if (log(rand(Uniform(0,1),1)[1]) < a )
         x0[:latent_sd_offset] = prop
@@ -987,22 +1025,24 @@ function draw_latent_sd_offset!(x0, dat, priors, σ = 0.01, track_accept = true)
     end
 end
 
-function draw_latent_sd_growth!(x0, dat, priors, σ = 0.01, track_accept = true)
+function draw_latent_sd_growth!(x0::Dict, dat::DataFrame, priors::Dict, σ=0.1, track_accept::Bool = true)
     prop = perturb_normal!(copy(x0[:latent_sd_growth]), σ)
-    prop_gparam = generate_gparam(x0[:raw_growth], x0[:X_growth], x0[:beta_growth], prop)
+    prop_gparam = generate_gparam(gparam_raw = x0[:raw_growth], X = x0[:X_growth], beta = x0[:beta_growth], latent_sd = prop)
     # log_posterior_raw(dat, asym_raw, offset_raw, growth_raw, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], prop, priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = prop, 
+    priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
     
     a = (f1-f0)              
     if (log(rand(Uniform(0,1),1)[1]) < a )
@@ -1014,39 +1054,23 @@ function draw_latent_sd_growth!(x0, dat, priors, σ = 0.01, track_accept = true)
     end
 end
 
-## if i need to draw latent sd's jointly...
-# function draw_latent_sd_all!(x0, σ = 0.1)
-#     prop1 = perturb_normal!(copy(x0[:latent_sd_asym]), σ)
-#     prop2 = perturb_normal!(copy(x0[:latent_sd_offset]), σ)
-#     prop3 = perturb_normal!(copy(x0[:latent_sd_growth]), σ)
-#     ##fc_latent_sd(latent_sd, beta, X, outcome, prior_sd = 1)
-#     f0 = fc_latent_sd(x0[:latent_sd_asym], x0[:beta_asym], x0[:X_asym], x0[:asym], 1) + 
-#         fc_latent_sd(x0[:latent_sd_offset], x0[:beta_offset], x0[:X_offset], x0[:offset], 1) +
-#         fc_latent_sd(x0[:latent_sd_growth], x0[:beta_growth], x0[:X_growth], x0[:growth], 1)
-#     f1 = fc_latent_sd(prop1, x0[:beta_asym], x0[:X_asym], x0[:asym], 1) + 
-#         fc_latent_sd(prop2, x0[:beta_offset], x0[:X_offset], x0[:offset], 1) +
-#         fc_latent_sd(prop3, x0[:beta_growth], x0[:X_growth], x0[:growth], 1)
-#     a = (f1-f0)              
-#     if (log(rand(Uniform(0,1),1)[1]) < a )
-#         x0[:latent_sd_growth] = prop
-#     end
-# end
-
 function draw_obs_sd!(x0, dat, priors, σ = 0.1, track_accept = true)
     prop = perturb_normal!(copy(x0[:obs_sd]), σ)
      # log_posterior_raw(dat, asym_raw, offset_raw, growth_raw, obs_sd, 
     #                 beta_asym, X_asym, latent_sd_asym, 
     #                 beta_offset, X_offset, latent_sd_offset, 
     #                 beta_growth, X_growth, latent_sd_growth, priors)
-    f1 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], prop, 
-                        x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                        x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                        x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    f1 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = prop, 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
 
-    f0 = log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                            x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                            x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                            x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+f0 = log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+    beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+    beta_offset = x0[:beta_offset], X_offset = x0[:X_offset],latent_sd_offset = x0[:latent_sd_offset], 
+    beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], 
+    priors =priors)
     a = (f1-f0)              
     if (log(rand(Uniform(0,1),1)[1]) < a )
         x0[:obs_sd] = prop
@@ -1126,10 +1150,10 @@ accept_keys = [:accept_raw_asym ,
 
 function run_mcmc_chain(fname, x0, monitors, dat, priors, perturb_sd, warmup, run, thin=10, verbose = 1)
 
-    if(!isfinite(log_posterior_raw(dat, x0[:raw_asym], x0[:raw_offset], x0[:raw_growth], x0[:obs_sd], 
-                x0[:beta_asym], x0[:X_asym], x0[:latent_sd_asym], 
-                x0[:beta_offset], x0[:X_offset], x0[:latent_sd_offset], 
-                x0[:beta_growth], x0[:X_growth], x0[:latent_sd_growth], priors)
+    if(!isfinite(log_posterior_raw(dat = dat, raw_asym = x0[:raw_asym], raw_offset = x0[:raw_offset], raw_growth = x0[:raw_growth], obs_sd = x0[:obs_sd], 
+                beta_asym = x0[:beta_asym], X_asym = x0[:X_asym], latent_sd_asym = x0[:latent_sd_asym], 
+                beta_offset = x0[:beta_offset], X_offset = x0[:X_offset], latent_sd_offset = x0[:latent_sd_offset], 
+                beta_growth = x0[:beta_growth], X_growth = x0[:X_growth], latent_sd_growth = x0[:latent_sd_growth], priors = priors)
                 )
         )
         error("log_posterior not finite at init")

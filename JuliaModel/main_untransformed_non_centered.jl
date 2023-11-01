@@ -28,7 +28,7 @@ beta_offset = 2.0
 beta_growth = 0.9
 X = repeat([1], outer = U) 
 
-latent_sd_asym = 10
+latent_sd_asym = 1
 latent_sd_offset = 0.01
 latent_sd_growth = 0.01
 
@@ -125,21 +125,21 @@ state2 = generate_init_state(copy(df), inits3)
 state3 = generate_init_state(copy(df), inits4)
 # function run_mcmc_chain(fname, x0, monitors, dat, warmup, run, thin=10, verbose = 1)
 ## latent_sd_offset not looking so good
-perturb_sd = Dict(:asym => 0.3, #asym
-:offset => 0.18, #offset
+perturb_sd = Dict(:asym => 0.25, #asym
+:offset => 0.15, #offset
 :growth => 0.007, #growth
 :beta_asym => 6.5, #beta_asym
 :beta_offset => 0.0035,  #beta_offset
-:beta_growth => 0.00013, #beta_growth
-:latent_sd_asym => 0.0025, #latent_sd_asym
-:latent_sd_offset => 0.000025, #latent_sd_offset
-:latent_sd_growth => 0.00013, #latent_sd_growth
+:beta_growth => 0.0001, #beta_growth
+:latent_sd_asym => 2.3, #latent_sd_asym
+:latent_sd_offset => 0.003, #latent_sd_offset
+:latent_sd_growth => 0.0001, #latent_sd_growth
 :obs_sd => 5 #obs_sd
 )
 
 # function run_mcmc_chain(fname, x0, monitors, dat, priors, perturb_sd, warmup, run, thin=10, verbose = 1)
 
-@time run_mcmc_chain(data_dir * "/reparam.csv", state0, monitors, df, priors, perturb_sd, 1,  10000, 20)
+@time run_mcmc_chain(data_dir * "/reparam.csv", state0, monitors, df, priors, perturb_sd, 1,  20000, 20)
 
 
 ##################################

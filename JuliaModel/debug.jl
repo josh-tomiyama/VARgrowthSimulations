@@ -51,8 +51,6 @@ mu = Vector{Float64}(undef, nrow(df))
 # for i in 1:nrow(df)
 #     mu[i] = asym[df.group[i]] * exp(-offset[df.group[i]] * exp(df.time[i]*log(growth[df.group[i]]) ) )
 # end
-
-# why doesn't log work here
 mu = [asym[i][1] for i in df.group] .* 
         exp.(-[offset[i][1] for i in df.group] .* exp.(df.time .* [log(growth[i][1]) for i in df.group]) ) 
 df.mu .= mu 
@@ -62,8 +60,6 @@ outcome = [rand(Normal(temp_mu, obs_sd), 1)[1] for temp_mu in df.mu]
 df.outcome .= outcome
 
 CSV.write(data_dir*"/untransform_data_sim.csv", df)
-
-
 
 ## the [1] is to ensure we don't get a vector of vectors
 inits2 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
@@ -152,6 +148,19 @@ log_posterior(df, state0[:asym], state0[:offset],
              state0[:X_growth], state0[:latent_sd_growth],
              priors)
 
+log_posterior(dat = df, asym = state0[:asym], offset = state0[:offset], growth = state0[:growth], obs_sd = state0[:obs_sd], 
+             beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = state0[:latent_sd_asym], 
+             beta_offset = state0[:beta_offset], X_offset = state0[:X_offset],latent_sd_offset = state0[:latent_sd_offset], 
+             beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], 
+             priors =priors)
+
+
+log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth = state0[:raw_growth], obs_sd = state0[:obs_sd], 
+             beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = state0[:latent_sd_asym], 
+             beta_offset = state0[:beta_offset], X_offset = state0[:X_offset],latent_sd_offset = state0[:latent_sd_offset], 
+             beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], 
+             priors =priors)
+
 log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
              state0[:beta_asym], state0[:X_asym], state0[:latent_sd_asym], 
              state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
@@ -178,11 +187,14 @@ priors2 = Dict(:asym => Uniform(18000, 22000), # unused
             :obs_sd => InverseGamma(1, 1))
 
 x = [0.001:0.001:2;]
-y = map(param -> log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], state0[:obs_sd], 
-beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd-asym = param, 
+y = map(param -> 
+log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
+obs_sd = state0[:obs_sd], 
+beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = param, 
 beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
-beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], priors = priors priors), x)
-plot(x, -y)
+beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], priors = priors), 
+    x)
+plot(x, y)
 plot!([1], seriestype = "vline")
 
 x = [18000:10:22000;]
@@ -190,28 +202,16 @@ y = map(param -> log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], s
 param, state0[:X_asym], state0[:latent_sd_asym], 
 state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
 state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors), x)
-plot(x, -y)
+plot(x, y)
 plot!([20000], seriestype = "vline")
 
 ####################
 ### optmization ###
 ###################
 
-### for minimization
-function log_posterior_raw2(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
-    beta_asym, X_asym, latent_sd_asym, 
-    beta_offset, X_offset, latent_sd_offset, 
-    beta_growth, X_growth, latent_sd_growth, priors)
-
-    -log_posterior_raw2(dat, raw_asym, raw_offset, raw_growth, obs_sd, 
-    beta_asym, X_asym, latent_sd_asym, 
-    beta_offset, X_offset, latent_sd_offset, 
-    beta_growth, X_growth, latent_sd_growth, priors)
-end
-
 nvar = 2
 init1 = [18000, 0.5]
-func = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+func = TwiceDifferentiable(param -> -log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
 param[1], state0[:X_asym], state0[:latent_sd_asym], 
 param[2], state0[:X_offset], state0[:latent_sd_offset], 
 state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
@@ -221,7 +221,7 @@ opt = optimize(func, [18000, 0.5])
 parameters = Optim.minimizer(opt)
 
 init2 = [19000, 0.5]
-func2 = TwiceDifferentiable(param -> log_posterior_raw2(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
+func2 = TwiceDifferentiable(param -> -log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
 param[1], state0[:X_asym], param[2], 
 state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
 state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
