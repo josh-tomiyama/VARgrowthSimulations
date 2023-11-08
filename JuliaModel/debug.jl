@@ -180,44 +180,115 @@ priors2 = Dict(:asym => Uniform(18000, 22000), # unused
             :growth_raw => Normal(0, 1),
             :beta_asym => Normal(20000, 10),
             :beta_offset => Normal(2, 0.2),
-            :beta_growth => Normal(0.9, 0.01),
-            :latent_sd_asym => InverseGamma(1, 1),
-            :latent_sd_offset => InverseGamma(1, 1), 
-            :latent_sd_growth => InverseGamma(1, 1),
+            :beta_growth => Uniform(0, 1),
+            :latent_sd_asym => truncated(Normal(0, 5), lower = 0),
+            :latent_sd_offset => truncated(Normal(0, 0.1), lower = 0), 
+            :latent_sd_growth => truncated(Normal(0, 0.1), lower = 0),
             :obs_sd => InverseGamma(1, 1))
 
 x = [0.001:0.001:2;]
 y = map(param -> 
 log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
+        obs_sd = state0[:obs_sd], 
+        beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = state0[:latent_sd_asym], 
+        beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
+        beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = param, priors = priors), 
+    x)
+plot(x, y)
+plot!([0.01], seriestype = "vline")
+
+x = [18000:10:22000;]
+y = map(param -> 
+log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
 obs_sd = state0[:obs_sd], 
-beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = param, 
+beta_asym = param, X_asym = state0[:X_asym], latent_sd_asym = state0[:latent_sd_asym], 
 beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
 beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], priors = priors), 
     x)
 plot(x, y)
-plot!([1], seriestype = "vline")
-
-x = [18000:10:22000;]
-y = map(param -> log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
-param, state0[:X_asym], state0[:latent_sd_asym], 
-state0[:beta_offset], state0[:X_offset], state0[:latent_sd_offset], 
-state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors), x)
-plot(x, y)
 plot!([20000], seriestype = "vline")
+
+
+### 3d plot
+
+using Plots;
+x=range(0.01,stop=0.1,length=l)
+y=range(0.8,stop=0.92,length=l)
+xy_grid = Iterators.product(x, y)
+z = [
+#     if isfinite(log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
+# obs_sd = state0[:obs_sd], 
+# beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = state0[:latent_sd_asym], 
+# beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
+# beta_growth = t[2], X_growth = state0[:X_growth], latent_sd_growth = t[1], priors = priors2))
+    log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
+    obs_sd = state0[:obs_sd], 
+    beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = state0[:latent_sd_asym], 
+    beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
+    beta_growth = t[2], X_growth = state0[:X_growth], latent_sd_growth = t[1], priors = priors2)
+    # else 
+    #     0
+    # end 
+    for t in collect(xy_grid)]
+plot(x,y,z,st=:surface)
+
+
+x=range(0.9,stop=1.5,length=l)
+y=range(18000,stop=21000,length=l)
+xy_grid = Iterators.product(x, y)
+z = [
+    log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
+    obs_sd = state0[:obs_sd], 
+    beta_asym = t[2], X_asym = state0[:X_asym], latent_sd_asym = t[1], 
+    beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
+    beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], priors = priors2)
+    for t in collect(xy_grid)]
+plot(x,y,z,st=:surface)
 
 ####################
 ### optmization ###
 ###################
 
-nvar = 2
-init1 = [18000, 0.5]
-func = TwiceDifferentiable(param -> -log_posterior_raw(df, state0[:raw_asym], state0[:raw_offset], state0[:raw_growth], state0[:obs_sd], 
-param[1], state0[:X_asym], state0[:latent_sd_asym], 
-param[2], state0[:X_offset], state0[:latent_sd_offset], 
-state0[:beta_growth], state0[:X_growth], state0[:latent_sd_growth], priors),
-           [18000, 0.5]; autodiff=:forward);
+priors2 = Dict(:asym => Uniform(18000, 22000), # unused
+            :offset => Uniform(1, 3), # unused
+            :growth => Uniform(0.7, 0.9), # unused
+            :asym_raw => Normal(0, 1),
+            :offset_raw => Normal(0, 1),
+            :growth_raw => Normal(0, 1),
+            :beta_asym => Normal(20000, 10),
+            :beta_offset => Normal(2, 0.2),
+            :beta_growth => Normal(0.9, 0.01),
+            # :latent_sd_asym => truncated(Normal(0, 5), lower = 0),
+            # :latent_sd_offset => truncated(Normal(0, 0.1), lower = 0), 
+            # :latent_sd_growth => truncated(Normal(0, 0.1), lower = 0),
+            :latent_sd_asym => Uniform(0, 10),
+            :latent_sd_offset => Uniform(0, 10), 
+            :latent_sd_growth => Uniform(0, 10),
+            :obs_sd => InverseGamma(1, 1))
 
-opt = optimize(func, [18000, 0.5])
+nvar = 2
+init1 = [0.7, 0.2]
+func = TwiceDifferentiable(param -> 
+-log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
+obs_sd = state0[:obs_sd], 
+beta_asym = state0[:beta_asym], X_asym = state0[:X_asym], latent_sd_asym = state0[:latent_sd_asym], 
+beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
+beta_growth = param[1], X_growth = state0[:X_growth], latent_sd_growth = param[2], priors = priors),
+           init1; autodiff=:forward);
+
+opt = optimize(func, init1)
+parameters = Optim.minimizer(opt)
+
+init2 = [19000, 0.5]
+func = TwiceDifferentiable(param -> 
+-log_posterior_raw(dat = df, raw_asym = state0[:raw_asym], raw_offset = state0[:raw_offset], raw_growth =state0[:raw_growth], 
+obs_sd = state0[:obs_sd], 
+beta_asym = param[1], X_asym = state0[:X_asym], latent_sd_asym = param[2], 
+beta_offset = state0[:beta_offset], X_offset = state0[:X_offset], latent_sd_offset = state0[:latent_sd_offset], 
+beta_growth = state0[:beta_growth], X_growth = state0[:X_growth], latent_sd_growth = state0[:latent_sd_growth], priors = priors),
+           init2; autodiff=:forward);
+
+opt = optimize(func, init2)
 parameters = Optim.minimizer(opt)
 
 init2 = [19000, 0.5]

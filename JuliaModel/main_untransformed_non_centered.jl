@@ -23,14 +23,22 @@ Random.seed!(1234)
 t = 50
 U = 50
 
+# beta_asym = log(20000.0)
+# beta_offset = log(2.0)
+# beta_growth = log(0.9/(1-0.9))
+
 beta_asym = 20000.0
 beta_offset = 2.0
 beta_growth = 0.9
 X = repeat([1], outer = U) 
 
+# latent_sd_asym = 0.1
+# latent_sd_offset = 0.001
+# latent_sd_growth = 0.001
+
 latent_sd_asym = 1
-latent_sd_offset = 0.01
-latent_sd_growth = 0.01
+latent_sd_offset = 0.001
+latent_sd_growth = 0.001
 
 obs_sd = 100
 
@@ -52,9 +60,12 @@ mu = Vector{Float64}(undef, nrow(df))
 #     mu[i] = asym[df.group[i]] * exp(-offset[df.group[i]] * exp(df.time[i]*log(growth[df.group[i]]) ) )
 # end
 
-# why doesn't log work here
 mu = [asym[i][1] for i in df.group] .* 
         exp.(-[offset[i][1] for i in df.group] .* exp.(df.time .* [log(growth[i][1]) for i in df.group]) ) 
+
+# mu = [exp(asym[i][1]) for i in df.group] .* 
+#         exp.(-[exp(offset[i][1]) for i in df.group] .* 
+#         exp.(df.time .* [log( logistic(growth[i][1])) for i in df.group]) ) 
 df.mu .= mu 
 
 outcome = [rand(Normal(temp_mu, obs_sd), 1)[1] for temp_mu in df.mu]
@@ -63,41 +74,30 @@ df.outcome .= outcome
 
 CSV.write(data_dir*"/untransform_data_sim.csv", df)
 
+function perturb_init(init, perturb_sd::Dict)
+        Dict(:asym => [rand(Normal(a, perturb_sd[:asym]), 1)[1] for a in init[:asym] ],
+        :offset => [rand(Normal(a, perturb_sd[:offset]), 1)[1] for a in init[:offset] ],
+        :growth => [rand(Normal(a, perturb_sd[:growth]), 1)[1] for a in init[:growth]],
+        :beta_asym => [rand(Normal(a, perturb_sd[:beta_asym]), 1)[1] for a in init[:beta_asym] ],
+        :beta_offset => [rand(Normal(a, perturb_sd[:beta_offset]), 1)[1] for a in init[:beta_offset] ],
+        :beta_growth =>  [rand(Normal(a, perturb_sd[:beta_growth]), 1)[1] for a in init[:beta_growth] ],
+        :latent_sd_asym => [rand(truncated(Normal(a, perturb_sd[:latent_sd_asym]), lower = 0), 1)[1] for a in init[:latent_sd_asym]],
+        :latent_sd_offset => [rand(truncated(Normal(a, perturb_sd[:latent_sd_offset]), lower = 0), 1)[1] for a in init[:latent_sd_offset]],
+        :latent_sd_growth =>  [rand(truncated(Normal(a, perturb_sd[:latent_sd_growth]), lower = 0), 1)[1] for a in init[:latent_sd_growth]],
+        :obs_sd =>  [rand(truncated(Normal(a, perturb_sd[:obs_sd]), lower = 0), 1)[1]  for a in init[:obs_sd]])
 
+end
 
-## the [1] is to ensure we don't get a vector of vectors
-inits2 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
-:offset => [rand(Normal(a, 0.01), 1)[1] for a in offset],
-:growth => [rand(Normal(a, 0.01), 1)[1] for a in growth],
-:beta_asym => [rand(Normal(a, 0.5), 1)[1] for a in [beta_asym ;;]],
-:beta_offset => [rand(Normal(a, 0.01), 1)[1] for a in [beta_offset ;;]],
-:beta_growth =>  [rand(Normal(a, 0.01), 1)[1] for a in [beta_growth ;;]],
-:latent_sd_asym => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_asym]],
-:latent_sd_offset => [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_offset]],
-:latent_sd_growth =>  [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_growth]],
-:obs_sd =>  [rand(truncated(Normal(a, 10), lower = 0), 1)[1]  for a in [obs_sd]])
-
-inits3 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
-:offset => [rand(Normal(a, 0.01), 1)[1] for a in offset],
-:growth => [rand(Normal(a, 0.01), 1)[1] for a in growth],
-:beta_asym => [rand(Normal(a, 0.5), 1)[1] for a in [beta_asym ;;]],
-:beta_offset => [rand(Normal(a, 0.01), 1)[1] for a in [beta_offset ;;]],
-:beta_growth =>  [rand(Normal(a, 0.01), 1)[1] for a in [beta_growth ;;]],
-:latent_sd_asym => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_asym]],
-:latent_sd_offset => [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_offset]],
-:latent_sd_growth =>  [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_growth]],
-:obs_sd =>  [rand(truncated(Normal(a, 10), lower = 0), 1)[1]  for a in [obs_sd]])
-
-inits4 = Dict(:asym => [rand(Normal(a, 0.5), 1)[1] for a in asym],
-:offset => [rand(Normal(a, 0.01), 1)[1] for a in offset],
-:growth => [rand(Normal(a, 0.01), 1)[1] for a in growth],
-:beta_asym => [rand(Normal(a, 0.5), 1)[1] for a in [beta_asym ;;]],
-:beta_offset => [rand(Normal(a, 0.01), 1)[1] for a in [beta_offset ;;]],
-:beta_growth =>  [rand(Normal(a, 0.01), 1)[1] for a in [beta_growth ;;]],
-:latent_sd_asym => [rand(truncated(Normal(a, 0.01), lower = 0), 1)[1] for a in [latent_sd_asym]],
-:latent_sd_offset => [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_offset]],
-:latent_sd_growth =>  [rand(truncated(Normal(a, 0.001), lower = 0), 1)[1] for a in [latent_sd_growth]],
-:obs_sd =>  [rand(truncated(Normal(a, 10), lower = 0), 1)[1]  for a in [obs_sd]])
+init_sd_trans = Dict(:asym => 0.1,
+:offset => 0.01,
+:growth => 0.01,
+:beta_asym => 0.05,
+:beta_offset => 0.01,
+:beta_growth =>  0.01,
+:latent_sd_asym => 0.01,
+:latent_sd_offset => 0.01,
+:latent_sd_growth =>  0.01,
+:obs_sd =>  10)
 
 init_truth = Dict(:asym => asym,
 :offset => offset,
@@ -110,24 +110,23 @@ init_truth = Dict(:asym => asym,
 :latent_sd_growth => [latent_sd_growth],
 :obs_sd => [obs_sd])
 
+inits2 = perturb_init(init_truth, init_sd_trans)
+inits3 = perturb_init(init_truth, init_sd_trans)
+inits4 = perturb_init(init_truth, init_sd_trans)
+
 
 #########################
 ## MCMC Initialization ##
 #########################
 
 ## Initialize state objects 
-# state0 = generate_init_state(copy(fulldata), inits)
-# @time run_mcmc_chain(data_dir * "/chains1.csv", state0, monitors, fulldata, 5000, 100000, 20)
-
 state0 = generate_init_state(copy(df), init_truth)
-state1 = generate_init_state(copy(df), inits2)
-state2 = generate_init_state(copy(df), inits3)
-state3 = generate_init_state(copy(df), inits4)
+
 # function run_mcmc_chain(fname, x0, monitors, dat, warmup, run, thin=10, verbose = 1)
-## latent_sd_offset not looking so good
+# latent_sd_offset not looking so good
 perturb_sd = Dict(:asym => 0.25, #asym
 :offset => 0.15, #offset
-:growth => 0.007, #growth
+:growth => 0.07, #growth
 :beta_asym => 6.5, #beta_asym
 :beta_offset => 0.0035,  #beta_offset
 :beta_growth => 0.0001, #beta_growth
@@ -137,14 +136,32 @@ perturb_sd = Dict(:asym => 0.25, #asym
 :obs_sd => 5 #obs_sd
 )
 
+# perturb_sd_trans = Dict(:asym => 0.002, #asym
+# :offset => 0.03, #offset
+# :growth => 0.032, #growth
+# :beta_asym => 0.00035, #beta_asym
+# :beta_offset => 0.0015,  #beta_offset
+# :beta_growth => 0.0013, #beta_growth
+# :latent_sd_asym => 0.0004, #latent_sd_asym
+# :latent_sd_offset => 0.0015, #latent_sd_offset
+# :latent_sd_growth => 0.0017, #latent_sd_growth
+# :obs_sd => 5 #obs_sd
+# )
+
 # function run_mcmc_chain(fname, x0, monitors, dat, priors, perturb_sd, warmup, run, thin=10, verbose = 1)
 
-@time run_mcmc_chain(data_dir * "/reparam.csv", state0, monitors, df, priors, perturb_sd, 1,  20000, 20)
+@time run_mcmc_chain(data_dir * "/reparam.csv", state0, monitors, df, priors, 
+                        gompertz_likelihood, perturb_sd, 1,  10000, 20)
 
 
 ##################################
 ######## Parallel MCMC ###########
 ##################################
+
+state0 = generate_init_state(copy(df), init_truth)
+state1 = generate_init_state(copy(df), inits2)
+state2 = generate_init_state(copy(df), inits3)
+state3 = generate_init_state(copy(df), inits4)
 
 # true_file_name = data_dir * "/truevals_reparam.csv"
 # write_csv_line(init_truth, symbols=[x for x in keys(init_truth)], file= true_file_name, newfile=true)
